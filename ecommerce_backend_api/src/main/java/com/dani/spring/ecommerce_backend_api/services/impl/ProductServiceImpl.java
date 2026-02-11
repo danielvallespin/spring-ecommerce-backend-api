@@ -11,7 +11,7 @@ import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService{
 
     @Autowired
     ProductRepository repository;
@@ -27,7 +27,5 @@ public class ProductServiceImpl implements ProductService {
     public Product save(Product product) {
         return repository.save(product);
     }
-
-    
 
 }

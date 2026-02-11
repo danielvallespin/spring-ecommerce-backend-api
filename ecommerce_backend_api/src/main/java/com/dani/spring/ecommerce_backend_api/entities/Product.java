@@ -2,6 +2,7 @@ package com.dani.spring.ecommerce_backend_api.entities;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,14 +21,17 @@ public class Product {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Nombre del producto", example = "PS5")
     @NotBlank
     @Size(min=4, max=45)
     private String name;
 
+    @Schema(description = "Descripcion del producto", example = "Consola de videojuegos")
     @NotBlank
     @Size(min=5, max=150)
     private String description;
 
+    @Schema(description = "Precio del producto", example = "499.95")
     @NotNull
     @Min(value=0)
     private BigDecimal price;
@@ -72,7 +76,6 @@ public class Product {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-
 
 
 }

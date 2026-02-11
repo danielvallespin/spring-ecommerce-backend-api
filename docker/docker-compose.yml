@@ -1,0 +1,18 @@
+services:
+  mysql-db:
+    image: mysql:8.1
+    container_name: spring_ecommerce_mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: spring-api1234
+      MYSQL_DATABASE: spring_ecommerce_db
+      MYSQL_USER: dani
+      MYSQL_PASSWORD: spring-api1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql-data:

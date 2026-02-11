@@ -1,5 +1,6 @@
 package com.dani.spring.ecommerce_backend_api.entities;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class Role {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Nombre del rol", example = "ROLE_USER")
     @NotBlank
     private String name;
 
