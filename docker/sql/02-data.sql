@@ -10,8 +10,8 @@ VALUES
 -- Usuarios iniciales
 INSERT INTO users (username, password, email, enabled, created_at)
 VALUES 
-('dani', '1234', 'dani@email.com', 1, CURDATE()),
-('admin', '1234', 'admin@email.com', 1, CURDATE());
+('dani', '$2a$10$KPjBgkVObnC9iXOrp/.HM.jF1l3bUaqCZkJRrASaWqOH5IaUADD/K', 'dani@email.com', 1, CURDATE()), -- Password: 1234
+('admin', '$2a$10$GpA8gpzcemMvu.KasOxvIO1KICEt70Dn4MZ4/QSPSzGBAIYmITmOS', 'admin@email.com', 1, CURDATE()); -- Password: admin
 
 -- Roles iniciales
 INSERT INTO roles (name)

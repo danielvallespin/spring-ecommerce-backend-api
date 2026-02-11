@@ -17,19 +17,20 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository repository;
 
-    @Transactional(readOnly=true)
     @Override
+    @Transactional(readOnly=true)
     public List<Product> findAll() {
         return (List<Product>) repository.findAll();
     }
     
     @Override
+    @Transactional(readOnly=true)
     public Optional<Product> getProductById(Long id) {
         return repository.findById(id);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Product save(Product product) {
         return repository.save(product);
     }

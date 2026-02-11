@@ -18,8 +18,7 @@ CREATE TABLE users (
     enabled TINYINT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE (username),
-    UNIQUE (email)
+    UNIQUE (username)
 );
 
 -- Tabla para roles
