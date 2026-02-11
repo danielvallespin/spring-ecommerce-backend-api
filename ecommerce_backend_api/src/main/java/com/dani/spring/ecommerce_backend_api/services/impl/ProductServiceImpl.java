@@ -1,6 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> findAll() {
         return (List<Product>) repository.findAll();
+    }
+    
+    @Override
+    public Optional<Product> getProductById(Long id) {
+        return repository.findById(id);
     }
 
     @Transactional

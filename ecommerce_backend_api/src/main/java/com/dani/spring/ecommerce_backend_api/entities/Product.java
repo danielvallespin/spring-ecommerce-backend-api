@@ -22,18 +22,18 @@ public class Product {
     private Long id;
 
     @Schema(description = "Nombre del producto", example = "PS5")
-    @NotBlank
-    @Size(min=4, max=45)
+    @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(min=4, max=45, message = "El nombre debe tener entre 4 y 45 caracteres")
     private String name;
 
     @Schema(description = "Descripcion del producto", example = "Consola de videojuegos")
-    @NotBlank
-    @Size(min=5, max=150)
+    @NotBlank(message = "La descripción del producto es obligatoria")
+    @Size(min=5, max=150, message = "La descripción debe tener entre 5 y 150 caracteres")
     private String description;
 
     @Schema(description = "Precio del producto", example = "499.95")
-    @NotNull
-    @Min(value=0)
+    @NotNull(message = "El precio del producto es obligatorio")
+    @Min(value=0, message = "El precio debe ser mayor o igual a 0")
     private BigDecimal price;
 
     public Product(){}
