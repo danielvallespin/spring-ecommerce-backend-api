@@ -1,3 +1,5 @@
+-- Todos estos datos son ficticios y han sido generados con IA generativa
+
 -- ======================================
 -- Productos iniciales
 -- ======================================
