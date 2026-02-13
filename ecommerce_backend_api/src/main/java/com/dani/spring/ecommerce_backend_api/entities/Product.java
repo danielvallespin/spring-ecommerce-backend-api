@@ -36,6 +36,11 @@ public class Product {
     @Min(value=0, message = "El precio debe ser mayor o igual a 0")
     private BigDecimal price;
 
+    @Schema(description = "Cantidad de stock del producto", example = "20")
+    @NotNull(message = "La cantidad del producto es obligatoria")
+    @Min(value=0, message = "El precio debe ser mayor o igual a 0")
+    private Integer stock;
+
     public Product(){}
 
     public Product(@NotBlank String name, String description, BigDecimal price) {
@@ -75,6 +80,14 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
 
