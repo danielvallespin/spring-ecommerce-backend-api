@@ -1,5 +1,8 @@
 -- Todos estos datos son ficticios y han sido generados con IA generativa
 
+-- Forzar UTF8MB4
+SET NAMES utf8mb4;
+
 -- ======================================
 -- Productos iniciales (las rutas de imagenes no son reales)
 -- ======================================
