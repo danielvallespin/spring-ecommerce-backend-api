@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.AntPathMatcher;
 
 import com.dani.spring.ecommerce_backend_api.security.SimpleGrantedAuthorityJsonCreator;
 import com.dani.spring.ecommerce_backend_api.security.TokenJwtData;
@@ -28,6 +30,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     public JwtValidationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -35,11 +39,17 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String path = request.getRequestURI();
+        String method = request.getMethod().toUpperCase();
 
         // Saltar rutas públicas
-        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/login")) {
-            chain.doFilter(request, response);
-            return;
+        List<String> publicPaths = TokenJwtData.PUBLIC_ROUTES.get(method);
+        if (publicPaths != null) {
+            for (String publicPath : publicPaths) {
+                if (pathMatcher.match(publicPath, path)) {
+                    chain.doFilter(request, response);
+                    return;
+                }
+            }
         }
 
         String header = request.getHeader(TokenJwtData.HEADER_AUTHORIZATION);
