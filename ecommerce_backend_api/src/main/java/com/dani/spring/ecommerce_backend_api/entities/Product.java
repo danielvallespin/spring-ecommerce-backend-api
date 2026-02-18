@@ -12,8 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 
+@Schema(description = "Objeto producto de la tabla products")
 @Table(name="products")
 @Entity
 public class Product {
@@ -24,12 +24,12 @@ public class Product {
 
     @Schema(description = "Nombre del producto", example = "PS5")
     @IsRequired
-    @StringSize(min=4, max=45)
+    @StringSize(min=3, max=45)
     private String name;
 
     @Schema(description = "Descripcion del producto", example = "Consola de videojuegos")
     @IsRequired
-    @StringSize(min=0, max=150)
+    @StringSize(min=5, max=150)
     private String description;
 
     @Schema(description = "Precio del producto", example = "499.95")
@@ -42,16 +42,26 @@ public class Product {
     @NumberRange(min=0)
     private Integer stock;
 
-    @Schema(description = "url de la imagen a mostrar del producto", example = "test.jpg")
+    @Schema(description = "url de la imagen a mostrar del producto", example = "/images/products/test.jpg")
     @IsRequired
     private String imageUrl;
 
+    @Schema(description = "Campo que indica si el campo es visible o no", example = "true")
+    private boolean visible;
+
     public Product(){}
 
-    public Product(@NotBlank String name, String description, BigDecimal price) {
+    public Product(String name, String description, BigDecimal price, Integer stock, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(String name, String description, BigDecimal price, Integer stock, String imageUrl, boolean visible) {
+        this(name, description, price, stock, imageUrl);
+        this.visible = visible;
     }
 
 
@@ -102,6 +112,15 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
 
 
 }

@@ -3,6 +3,8 @@ package com.dani.spring.ecommerce_backend_api.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
+import com.dani.spring.ecommerce_backend_api.validations.StringSize;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,9 +20,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
+@Schema(description = "Objeto user de la tabla users")
 @Table(name="users")
 @Entity
 public class User {
@@ -30,14 +31,15 @@ public class User {
     private Long id;
 
     @Schema(description = "Username del usuario", example = "dani")
-    @NotBlank
+    @IsRequired
     private String username;
 
     @Schema(description = "Password del usuario", example = "1234")
-    @Size(min=8, max=20)
+    @StringSize(min=8, max=20)
     private String password;
 
     @Schema(description = "Email del usuario", example = "dani@email.com")
+    @IsRequired
     @Email
     private String email;
 

@@ -4,6 +4,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dani.spring.ecommerce_backend_api.dto.LoginRequest;
+import com.dani.spring.ecommerce_backend_api.dto.LoginResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,73 +30,9 @@ public class AuthController {
     })
     @PostMapping("/login")
     public void login(@RequestBody LoginRequest loginRequest) {
-        // Este método NO se ejecuta realmente
-        // Solo está aquí para documentación de Swagger
-        // El filtro JwtAuthenticationFilter intercepta esta ruta
+        // Este método NO se ejecuta realmente está aquí para documentación de Swagger
+        // El filtro JwtAuthenticationFilter intercepta esta ruta y ejecuta la creacion del token
         throw new IllegalStateException("Este método no debería ser llamado. Es manejado por JwtAuthenticationFilter");
     }
 
-    // DTOs para documentación
-    @Schema(description = "Credenciales de login")
-    public static class LoginRequest {
-        @Schema(description = "Nombre de usuario", example = "admin")
-        private String username;
-        
-        @Schema(description = "Contraseña", example = "admin")
-        private String password;
-
-        // Getters y setters
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    @Schema(description = "Respuesta de login exitoso")
-    public static class LoginResponse {
-        @Schema(description = "Token JWT", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
-        private String token;
-        
-        @Schema(description = "Nombre de usuario autenticado", example = "admin")
-        private String username;
-        
-        @Schema(description = "Mensaje de éxito", example = "Login exitoso")
-        private String message;
-
-        // Getters y setters
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-    }
 }

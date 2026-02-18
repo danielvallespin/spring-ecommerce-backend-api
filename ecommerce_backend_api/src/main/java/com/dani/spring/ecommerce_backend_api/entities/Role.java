@@ -1,5 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.entities;
 
+import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+@Schema(description = "Objeto role de la tabla roles")
 @Table(name="roles")
 @Entity
 public class Role {
@@ -17,7 +20,7 @@ public class Role {
     private Long id;
 
     @Schema(description = "Nombre del rol", example = "ROLE_USER")
-    @NotBlank
+    @IsRequired
     private String name;
 
     public Role(){}
