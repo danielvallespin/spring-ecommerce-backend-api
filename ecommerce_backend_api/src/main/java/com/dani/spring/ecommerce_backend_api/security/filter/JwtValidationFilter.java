@@ -34,11 +34,22 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(TokenJwtData.HEADER_AUTHORIZATION);
-        if (header == null || !header.startsWith(TokenJwtData.PREFIX_TOKEN)){
+        String path = request.getRequestURI();
+
+        // Saltar rutas públicas
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/login")) {
             chain.doFilter(request, response);
             return;
         }
+
+        String header = request.getHeader(TokenJwtData.HEADER_AUTHORIZATION);
+        if (header == null || !header.startsWith(TokenJwtData.PREFIX_TOKEN)){
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("{\"error\":\"Token JWT no proporcionado\"}");
+            response.setContentType(TokenJwtData.CONTENT_TYPE);
+            return;
+        }
+
         String token = header.replace(TokenJwtData.PREFIX_TOKEN, "");
         try{
             //Validar token
@@ -53,7 +64,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
                         new ObjectMapper()
                         .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
                         .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
-
+                        
             //Creamos una autenticacion
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
             //Guardar autenticacion (IMPORTANTE)
@@ -72,5 +83,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             response.setContentType(TokenJwtData.CONTENT_TYPE);
         }
     }
+
 
 }

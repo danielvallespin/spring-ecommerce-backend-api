@@ -1,17 +1,30 @@
 -- Todos estos datos son ficticios y han sido generados con IA generativa
 
 -- ======================================
--- Productos iniciales
+-- Productos iniciales (las rutas de imagenes no son reales)
 -- ======================================
-INSERT INTO products (name, description, price, stock)
+INSERT INTO products (name, description, price, stock, image_url)
 VALUES
-('Laptop Lenovo', 'Laptop Lenovo i7 16GB RAM 512GB SSD', 899.99, 15),
-('iPhone 15', 'Smartphone Apple iPhone 15 128GB', 999.00, 20),
-('Monitor LG 27"', 'Monitor LG 27 pulgadas Full HD', 299.90, 16),
-('Teclado Mecanico', 'Teclado mecanico RGB switches blue', 79.50, 30),
-('Mouse Logitech', 'Mouse inalambrico Logitech MX Master', 59.99, 50),
-('Auriculares Bluetooth', 'Auriculares inalámbricos con cancelación de ruido', 120.00, 28),
-('Reloj Inteligente', 'Smartwatch con monitor de actividad', 199.99, 12);
+('Laptop Lenovo', 'Laptop Lenovo i7 16GB RAM 512GB', 899.99, 15, '/images/products/lenovo-i7.jpg'),
+('iPhone 15', 'Smartphone Apple iPhone 15 128GB', 999.00, 20, '/images/products/iphone15.jpg'),
+('Monitor LG 27"', 'Monitor LG 27 pulgadas Full HD', 299.90, 16, '/images/products/monitor-lg-27.jpg'),
+('Teclado Mecanico', 'Teclado mecanico RGB switches blue', 79.50, 30, '/images/products/teclado-mecanico-rgb.jpg'),
+('Mouse Logitech', 'Mouse inalambrico Logitech MX Master', 59.99, 50, '/images/products/mouse-logitech-mx.jpg'),
+('Auriculares Bluetooth', 'Auriculares inalámbricos con cancelación de ruido', 120.00, 28, '/images/products/auriculares-bt.jpg'),
+('Reloj Inteligente', 'Smartwatch con monitor de actividad', 199.99, 12, '/images/products/smartwatch.jpg');
+
+-- ======================================
+-- Detalle de los productos
+-- ======================================
+INSERT INTO product_details (product_id, long_description, brand, categories)
+VALUES
+(1, 'Laptop Lenovo equipada con procesador Intel i7 de última generación, 16GB de RAM DDR4 y SSD de 512GB. Ideal para trabajo profesional, programación y gaming ligero. Pantalla Full HD de 15.6 pulgadas y batería de larga duración.', 'Lenovo', 'Electrónica,Ordenadores,Laptops'),
+(2, 'El nuevo iPhone 15 con chip A16 Bionic, pantalla Super Retina XDR de 6.1 pulgadas y cámara dual de alta resolución. Compatible con 5G y Face ID. Diseño elegante y resistente al agua.', 'Apple', 'Electrónica,Smartphones'),
+(3, 'Monitor LG de 27 pulgadas con resolución Full HD (1920x1080), panel IPS y tasa de refresco de 75Hz. Ideal para oficina, diseño básico y entretenimiento multimedia.', 'LG', 'Electrónica,Monitores'),
+(4, 'Teclado mecánico con iluminación RGB personalizable y switches blue de alta precisión. Construcción robusta en aluminio y tecnología anti-ghosting para gaming competitivo.', 'Generic', 'Electrónica,Periféricos,Teclados'),
+(5, 'Mouse inalámbrico Logitech MX Master con sensor de alta precisión, múltiples botones configurables y batería recargable de larga duración. Perfecto para productividad avanzada.', 'Logitech', 'Electrónica,Periféricos,Mouse'),
+(6, 'Auriculares Bluetooth con cancelación activa de ruido (ANC), sonido envolvente y hasta 30 horas de autonomía. Incluye micrófono integrado para llamadas.', 'Sony', 'Electrónica,Audio'),
+(7, 'Reloj inteligente con monitorización de ritmo cardíaco, seguimiento de actividad física y notificaciones inteligentes. Compatible con Android e iOS.', 'Xiaomi', 'Electrónica,Wearables');
 
 -- ======================================
 -- Usuarios iniciales

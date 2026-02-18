@@ -33,7 +33,7 @@ public class User {
     @NotBlank
     private String username;
 
-    @Schema(description = "Password del usuario", example = "Password1234")
+    @Schema(description = "Password del usuario", example = "1234")
     @Size(min=8, max=20)
     private String password;
 

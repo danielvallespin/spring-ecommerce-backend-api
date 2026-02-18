@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,18 +41,34 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.authorizeHttpRequests( (authz) -> authz
-            .requestMatchers(HttpMethod.POST, "/login").permitAll()
-            .requestMatchers(HttpMethod.GET, "/product").permitAll()
-            .requestMatchers(HttpMethod.GET, "/product/{id}").permitAll()
-            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() //Acceso al swagger
-                .anyRequest().authenticated())
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilter(new JwtValidationFilter(authenticationManager()))
-            .csrf(config -> config.disable()) //Capa extra de seguridad
-            .cors(cors -> cors.configurationSource(configurationSource())) //Agregar cors
-            .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Quitar estado Http y gestionar por token
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            // Deshabilitar CSRF porque usamos JWT
+            .csrf(csrf -> csrf.disable())
+
+            // Configuración de CORS
+            .cors(cors -> cors.configurationSource(configurationSource()))
+
+            // Configurar las reglas de autorización
+            .authorizeHttpRequests(authz -> authz
+                // Permitir preflight OPTIONS
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // Rutas públicas
+                .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
+                // Swagger y OpenAPI
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                // Cualquier otra ruta requiere autenticación
+                .anyRequest().authenticated()
+            )
+
+            // JWT filters
+            .addFilterBefore(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+
+            // Stateless: no sesiones HTTP
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
             .build();
     }
 

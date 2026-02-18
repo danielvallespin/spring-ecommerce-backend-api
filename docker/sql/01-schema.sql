@@ -5,9 +5,20 @@ CREATE TABLE products (
     description VARCHAR(150) NOT NULL,
     price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     stock INT NOT NULL CHECK (stock >= 0),
+    image_url VARCHAR(500) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
+);
+
+-- Tabla detalle del producto
+CREATE TABLE product_details (
+    product_id BIGINT NOT NULL,
+    long_description TEXT,
+    brand VARCHAR(50),
+    categories VARCHAR(150),
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Tabla para users

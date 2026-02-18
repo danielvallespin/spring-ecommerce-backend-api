@@ -23,23 +23,25 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
+        // Nombre del esquema de seguridad (debe coincidir en SecurityRequirement)
+        final String securitySchemeName = "Bearer Authentication";
+
         return new OpenAPI()
                 .info(new Info()
                         .title("Ecommerce API")
                         .version("1.0")
                         .description("API REST para ecommerce desarrollada con Spring Boot 3.5.10"))
                 // Agregar el requisito de seguridad global
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 // Configurar el esquema de seguridad JWT
                 .components(new Components()
-                        .addSecuritySchemes("Bearer Authentication", 
+                        .addSecuritySchemes(securitySchemeName, 
                             new SecurityScheme()
+                                .name("Authorization")
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .in(SecurityScheme.In.HEADER)
-                                .name("Authorization")
-                                .description("Ingresa tu token JWT (sin 'Bearer')")
+                                .description("Ingresa tu token JWT sin añadir 'Bearer '")
                         )
                 );
     }
