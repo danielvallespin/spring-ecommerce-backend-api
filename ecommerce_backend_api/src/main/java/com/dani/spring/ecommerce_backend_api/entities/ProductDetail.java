@@ -1,7 +1,6 @@
 package com.dani.spring.ecommerce_backend_api.entities;
 
-import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
-import com.dani.spring.ecommerce_backend_api.validations.StringSize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -21,20 +20,14 @@ public class ProductDetail {
     @Id
     private Long productId;
 
-    @Schema(description = "Descripción extendida del producto", example = "Video consola de ultima generacion capaz de ejecutar juegos con una resolucion de 4k y una tasa de 120Hz")
     @Column(name = "long_description")
-    @StringSize(min = 10)
-    @IsRequired
     private String longDescription;
 
-    @Schema(description = "Marca del producto", example = "Sony")
-    @IsRequired
     private String brand;
 
-    @Schema(description = "Categorias a las que pertenece el produto", example = "ROLE_USER")
-    @IsRequired
     private String categories;
 
+    @JsonIgnore
     @OneToOne
     @MapsId
     @JoinColumn(name="product_id")
@@ -51,10 +44,6 @@ public class ProductDetail {
 
     public Long getProductId() {
         return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 
     public String getLongDescription() {

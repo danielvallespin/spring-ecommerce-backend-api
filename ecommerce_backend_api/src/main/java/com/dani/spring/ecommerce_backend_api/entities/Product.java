@@ -2,15 +2,14 @@ package com.dani.spring.ecommerce_backend_api.entities;
 
 import java.math.BigDecimal;
 
-import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
-import com.dani.spring.ecommerce_backend_api.validations.NumberRange;
-import com.dani.spring.ecommerce_backend_api.validations.StringSize;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Schema(description = "Objeto producto de la tabla products")
@@ -22,32 +21,23 @@ public class Product {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Schema(description = "Nombre del producto", example = "PS5")
-    @IsRequired
-    @StringSize(min=3, max=45)
     private String name;
 
-    @Schema(description = "Descripcion del producto", example = "Consola de videojuegos")
-    @IsRequired
-    @StringSize(min=5, max=150)
     private String description;
 
-    @Schema(description = "Precio del producto", example = "499.95")
-    @IsRequired
-    @NumberRange(min=0)
     private BigDecimal price;
 
-    @Schema(description = "Cantidad de stock del producto", example = "20")
-    @IsRequired
-    @NumberRange(min=0)
     private Integer stock;
 
-    @Schema(description = "url de la imagen a mostrar del producto", example = "/images/products/test.jpg")
-    @IsRequired
     private String imageUrl;
 
-    @Schema(description = "Campo que indica si el campo es visible o no", example = "true")
-    private boolean visible;
+    private Boolean visible;
+
+    @OneToOne(mappedBy = "product",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY,
+          orphanRemoval = true)
+    private ProductDetail detail;
 
     public Product(){}
 
@@ -59,7 +49,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product(String name, String description, BigDecimal price, Integer stock, String imageUrl, boolean visible) {
+    public Product(String name, String description, BigDecimal price, Integer stock, String imageUrl, Boolean visible) {
         this(name, description, price, stock, imageUrl);
         this.visible = visible;
     }
@@ -113,14 +103,21 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isVisible() {
+    public Boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public void setVisible(Boolean visible) {
         this.visible = visible;
     }
 
+    public ProductDetail getDetail() {
+        return detail;
+    }
+
+    public void setDetail(ProductDetail detail) {
+        this.detail = detail;
+    }
 
 
 }

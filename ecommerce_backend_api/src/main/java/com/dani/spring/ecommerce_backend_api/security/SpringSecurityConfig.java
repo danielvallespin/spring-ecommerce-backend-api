@@ -10,6 +10,7 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 import com.dani.spring.ecommerce_backend_api.security.filter.JwtAuthenticationFilter;
 import com.dani.spring.ecommerce_backend_api.security.filter.JwtValidationFilter;
 
+@EnableMethodSecurity
 @Configuration
 public class SpringSecurityConfig {
     
@@ -55,7 +57,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Rutas públicas
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/product", "/product/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/product", "/product/*").permitAll()
                 // Swagger y OpenAPI
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // Cualquier otra ruta requiere autenticación

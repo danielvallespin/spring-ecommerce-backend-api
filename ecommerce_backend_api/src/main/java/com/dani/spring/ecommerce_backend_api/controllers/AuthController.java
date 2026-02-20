@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.LoginRequest;
-import com.dani.spring.ecommerce_backend_api.dto.LoginResponse;
+import com.dani.spring.ecommerce_backend_api.dto.LoginRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.LoginResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,13 +23,13 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", 
                         description = "Login exitoso - Token en header 'Authorization' y en el body",
-                        content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+                        content = @Content(schema = @Schema(implementation = LoginResponseDto.class))),
             @ApiResponse(responseCode = "401", 
                         description = "Credenciales inválidas",
                         content = @Content)
     })
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequest loginRequest) {
+    public void login(@RequestBody LoginRequestDto loginRequest) {
         // Este método NO se ejecuta realmente está aquí para documentación de Swagger
         // El filtro JwtAuthenticationFilter intercepta esta ruta y ejecuta la creacion del token
         throw new IllegalStateException("Este método no debería ser llamado. Es manejado por JwtAuthenticationFilter");
