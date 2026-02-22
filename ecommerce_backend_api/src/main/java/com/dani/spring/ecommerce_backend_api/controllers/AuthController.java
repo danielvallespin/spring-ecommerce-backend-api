@@ -25,7 +25,7 @@ public class AuthController {
                         description = "Login exitoso - Token en header 'Authorization' y en el body",
                         content = @Content(schema = @Schema(implementation = LoginResponseDto.class))),
             @ApiResponse(responseCode = "401", 
-                        description = "Credenciales inválidas",
+                        description = "Credenciales inválidas", 
                         content = @Content)
     })
     @PostMapping("/login")

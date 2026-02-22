@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.FullProductRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.ProductUpdateDto;
 import com.dani.spring.ecommerce_backend_api.dto.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 
@@ -15,6 +16,6 @@ public interface ProductService {
 
     Product createFullProduct(FullProductRequestDto productRequest);
 
-    Optional<Product> modifyFullProduct(FullProductRequestDto productRequest, Long id);
+    Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id);
 
 }

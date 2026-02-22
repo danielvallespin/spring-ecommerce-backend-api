@@ -16,6 +16,9 @@ import com.dani.spring.ecommerce_backend_api.entities.User;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -30,8 +33,11 @@ public class UserController {
     //GET_ALL
     @Operation(summary = "Obtener todos los usuarios del sistema (solo para admins)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor"),
+            @ApiResponse(
+                responseCode = "200", 
+                description = "Lista de usuarios obtenida correctamente", 
+                content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
@@ -42,9 +48,9 @@ public class UserController {
     //CREATE
     @Operation(summary = "Crear usuario con capacidad de hacerlo admin (solo para admins)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario creado correctamente"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor"),
-            @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación")
+            @ApiResponse(responseCode = "200", description = "Usuario creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

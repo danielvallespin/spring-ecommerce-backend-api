@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.FullProductRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.ProductUpdateDto;
 import com.dani.spring.ecommerce_backend_api.dto.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.entities.ProductDetail;
@@ -68,8 +69,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Transactional
     @Override
-    public Optional<Product> modifyFullProduct(FullProductRequestDto productRequest, Long id) {
-
+    public Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id) {
          return repository.findById(id).map(product -> {
             //Aqui validamos si hay datos de cada campo informados sino se dejaran los ya existentes
             product.setName(productRequest.getName() != null ? productRequest.getName() : product.getName());
