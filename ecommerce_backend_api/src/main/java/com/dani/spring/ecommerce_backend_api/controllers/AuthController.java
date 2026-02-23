@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Autenticación", description = "Endpoints de autenticación y autorización")
 public class AuthController {
 
-    @Operation(summary = "Login de usuario", 
+    @Operation(summary = "Login de usuario (SIN JWT)", 
                description = "Autentica un usuario y retorna un token JWT en el header 'Authorization' y en el body")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", 

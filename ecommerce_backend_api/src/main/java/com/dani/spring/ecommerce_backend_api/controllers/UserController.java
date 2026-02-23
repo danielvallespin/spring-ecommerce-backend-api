@@ -81,7 +81,7 @@ public class UserController {
     }
 
     //CREATE (NORMAL)
-    @Operation(summary = "Crear usuario normal")
+    @Operation(summary = "Crear usuario normal (SIN JWT)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
