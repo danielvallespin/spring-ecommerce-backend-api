@@ -25,8 +25,8 @@ CREATE TABLE product_details (
 -- Tabla para users
 CREATE TABLE users (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(20) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    username VARCHAR(25) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     enabled TINYINT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
