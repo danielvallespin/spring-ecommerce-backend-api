@@ -26,8 +26,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Users", description = "API para la gestion de usuarios")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -59,7 +61,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserAdminResponseDto> getUserById(@PathVariable Long id){
-        UserAdminResponseDto userResponse = service.getById(id);
+        UserAdminResponseDto userResponse = service.getResponseById(id);
         if (userResponse == null){
             return ResponseEntity.notFound().build();
         }
@@ -100,7 +102,7 @@ public class UserController {
     })
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
-        return ResponseEntity.ok(service.getMyUser(principal.getName()));
+        return ResponseEntity.ok(service.getMyUserResponse(principal.getName()));
     }
 
 

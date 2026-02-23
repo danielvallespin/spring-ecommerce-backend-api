@@ -41,12 +41,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public UserAdminResponseDto getById(Long id){
-        Optional<User> optUser = repository.getById(id);
+    public UserAdminResponseDto getResponseById(Long id){
+        Optional<User> optUser = getById(id);
         if (optUser.isPresent()){
             return getUserAdminResponse(optUser.orElseThrow());
         }
         return null;
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public Optional<User> getById(Long id){
+        return  repository.getById(id);
     }
 
     @Override
@@ -77,11 +83,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public UserResponseDto getMyUser(String username) {
-        User user = repository.getByUsername(username).orElseThrow();
+    public UserResponseDto getMyUserResponse(String username) {
+        User user = getMyUser(username).orElseThrow();
         return new UserResponseDto(user.getUsername(), user.getEmail());
     }
 
+    @Override
+    @Transactional(readOnly=true)
+    public Optional<User> getMyUser(String username) {
+        return repository.getByUsername(username);
+    }
 
 
     /**

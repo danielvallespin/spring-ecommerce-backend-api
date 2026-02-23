@@ -1,19 +1,25 @@
 package com.dani.spring.ecommerce_backend_api.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.UserAdminResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.UserRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.UserResponseDto;
+import com.dani.spring.ecommerce_backend_api.entities.User;
 
 public interface UserService {
 
     List<UserAdminResponseDto> getAll();
 
-    UserAdminResponseDto getById(Long id);
+    UserAdminResponseDto getResponseById(Long id);
+
+    Optional<User> getById(Long id);
 
     UserResponseDto save(UserRequestDto user);
 
-    UserResponseDto getMyUser(String username);
+    UserResponseDto getMyUserResponse(String username);
+
+    Optional<User> getMyUser(String username);
 
 }
