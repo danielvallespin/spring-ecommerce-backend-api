@@ -3,8 +3,6 @@ package com.dani.spring.ecommerce_backend_api.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
-import com.dani.spring.ecommerce_backend_api.validations.StringSize;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +17,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.Email;
 
 @Schema(description = "Objeto user de la tabla users")
 @Table(name="users")
@@ -30,17 +27,10 @@ public class User {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Schema(description = "Username del usuario", example = "dani")
-    @IsRequired
     private String username;
 
-    @Schema(description = "Password del usuario", example = "1234")
-    @StringSize(min=8, max=20)
     private String password;
 
-    @Schema(description = "Email del usuario", example = "dani@email.com")
-    @IsRequired
-    @Email
     private String email;
 
     @ManyToMany
@@ -54,7 +44,6 @@ public class User {
 
     @Transient
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Schema(description = "Admin", example = "true")
     private boolean admin;
 
     private boolean enabled;

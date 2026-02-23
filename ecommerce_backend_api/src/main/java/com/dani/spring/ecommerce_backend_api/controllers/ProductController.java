@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     //GET_BY_ID
-    @Operation(summary = "Obtener un producto filtrando por la id")
+    @Operation(summary = "Obtener un producto y su detalle filtrando por la id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),

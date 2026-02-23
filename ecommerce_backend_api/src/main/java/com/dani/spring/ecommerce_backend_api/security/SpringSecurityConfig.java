@@ -56,7 +56,7 @@ public class SpringSecurityConfig {
                 // Permitir preflight OPTIONS
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Rutas públicas
-                .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/login", "/user/singup").permitAll()
                 .requestMatchers(HttpMethod.GET, "/product", "/product/*").permitAll()
                 // Swagger y OpenAPI
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()

@@ -9,8 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dani.spring.ecommerce_backend_api.dto.UserAdminRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.UserAdminResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.UserRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.UserResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.Role;
 import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.exceptions.UsernameAlreadyExistsException;
 import com.dani.spring.ecommerce_backend_api.repositories.RoleRepository;
 import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
@@ -29,26 +34,70 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public List<User> getAll() {
-        return (List<User>) repository.findAll();
+    public List<UserAdminResponseDto> getAll() {
+        List<User> users = (List<User>) repository.findAll();
+        return getListOfUserAdminResponse(users);
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public UserAdminResponseDto getById(Long id){
+        Optional<User> optUser = repository.getById(id);
+        if (optUser.isPresent()){
+            return getUserAdminResponse(optUser.orElseThrow());
+        }
+        return null;
     }
 
     @Override
     @Transactional
-    public User save(User user) {
-        List<Role> roles = getUserRolesList(user.isAdmin());
-        user.setRoles(roles);
-        user.setPassword(encodePasswd(user.getPassword()));
+    public UserResponseDto save(UserRequestDto user) {
+        //Validamos que no exista el username y si existe lanzamos excepcion controlada
+        if (repository.existsByUsername(user.getUsername())){
+            throw new UsernameAlreadyExistsException(String.format("El username %s ya existe, debe utilizar otro.", user.getUsername()));
+        }
+        //Creamos el nuevo usuario y lo guardamos
+        User newUser = new User(user.getEmail(), user.getUsername(), user.getPassword());
+        Boolean admin = false;
+        if (user instanceof UserAdminRequestDto adminDto) {
+            admin = adminDto.isAdmin();
+        }
+        List<Role> roles = getUserRolesList(admin);
+        newUser.setRoles(roles);
+        newUser.setPassword(encodePasswd(user.getPassword()));
+        
+        repository.save(newUser);
 
-        return repository.save(user);
+        //Devolvemos entidad mas o menos completa segun el rol
+        if (admin){
+            return getUserAdminResponse(newUser);
+        }
+        return new UserResponseDto(newUser.getUsername(), newUser.getEmail());
     }
 
-    //Cifrar password
+    @Override
+    @Transactional(readOnly=true)
+    public UserResponseDto getMyUser(String username) {
+        User user = repository.getByUsername(username).orElseThrow();
+        return new UserResponseDto(user.getUsername(), user.getEmail());
+    }
+
+
+
+    /**
+     * Metodo que devuelve una password ya cifrada 
+     * @param str
+     * @return
+     */
     private String encodePasswd(String str){
         return passwordEncoder.encode(str);
     }
 
-    //Asignar roles a un usuario al crearlo
+    /**
+     * Metodo que sirve para asignar los roles a un usuario en su creacion
+     * @param isAdmin
+     * @return
+     */
     private List<Role> getUserRolesList(boolean isAdmin){
         List<Role> roles = new ArrayList<>();
 
@@ -62,5 +111,47 @@ public class UserServiceImpl implements UserService{
         
         return roles;
     }
+
+    /**
+     * Metodo para obtener un lista de la respuesta dto de user admin
+     * @param users
+     * @return
+     */
+    private List<UserAdminResponseDto> getListOfUserAdminResponse(List<User> users){
+        List<UserAdminResponseDto> response = new ArrayList<>();
+        for (User user : users){
+            response.add(getUserAdminResponse(user));
+        }
+
+        return response;
+    }
+
+    /**
+     * Metodo para obtener un objeto de respuesta dto de user admin
+     * @param user
+     * @return
+     */
+    private UserAdminResponseDto getUserAdminResponse(User user){
+        return new UserAdminResponseDto(
+            user.getUsername(), 
+            user.getEmail(), 
+            user.isEnabled(), 
+            getListRolesOfUser(user.getRoles()));
+    }
+
+    /**
+     * Metodo para obtener una lista con los roles de un usuario
+     * @param roles
+     * @return
+     */
+    private List<String> getListRolesOfUser(List<Role> roles){
+        List<String> rolesList = new ArrayList<>();
+        for(Role role : roles){
+            rolesList.add(role.getName());
+        }
+
+        return rolesList;
+    }
+
 
 }

@@ -24,7 +24,8 @@ public class TokenJwtData {
                     "/v3/api-docs/**"
             ),
             "POST", List.of(
-                    "/login"
+                    "/login",
+                    "/user/singup"
             )
     );
 

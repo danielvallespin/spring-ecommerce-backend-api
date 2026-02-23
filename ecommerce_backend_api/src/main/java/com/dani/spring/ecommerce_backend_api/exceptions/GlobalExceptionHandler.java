@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         
@@ -33,6 +33,18 @@ public class GlobalExceptionHandler {
         response.put("errors", errors);
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<?> handleUsernameExists(
+            UsernameAlreadyExistsException ex) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "USERNAME_ALREADY_EXISTS");
+        body.put("message", ex.getMessage());
+        body.put("status", 400);
+
+        return ResponseEntity.badRequest().body(body);
     }
 
 }
