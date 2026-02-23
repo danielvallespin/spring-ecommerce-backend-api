@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = Jwts.builder()
                         .subject(username)
                         .claims(claims)
-                        .expiration(new Date(System.currentTimeMillis() + 36000000)) //1h de token
+                        .expiration(new Date(System.currentTimeMillis() + 7200000)) //2h de token
                         .issuedAt(new Date()) //Fecha creacion
                         .signWith(TokenJwtData.SECRET_KEY)
                         .compact();
