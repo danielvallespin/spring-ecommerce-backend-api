@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,8 +13,6 @@ public class LoginResponseDto {
 
     @Schema(description = "Mensaje de éxito", example = "Login exitoso")
     private String message;
-
-    public LoginResponseDto(){}
 
     public LoginResponseDto(String token, String username, String message) {
         this.token = token;

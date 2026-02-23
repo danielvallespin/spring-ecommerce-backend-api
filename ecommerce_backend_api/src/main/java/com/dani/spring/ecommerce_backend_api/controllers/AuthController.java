@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.LoginRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.LoginResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.LoginRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.LoginResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dani.spring.ecommerce_backend_api.dto.FullProductRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.dto.SimpleProductDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.entities.ProductDetail;
 import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;

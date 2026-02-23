@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.UserAdminRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserAdminResponseDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;

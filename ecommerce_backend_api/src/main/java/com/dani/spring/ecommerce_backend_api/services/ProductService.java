@@ -3,9 +3,9 @@ package com.dani.spring.ecommerce_backend_api.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.dani.spring.ecommerce_backend_api.dto.FullProductRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.dto.SimpleProductDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 
 public interface ProductService {

@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 import java.util.List;
 
@@ -7,8 +7,6 @@ public class UserAdminResponseDto extends UserResponseDto{
     private boolean enabled;
 
     private List<String> roles;
-
-    public UserAdminResponseDto(){}
 
     public UserAdminResponseDto(String username, String email, boolean enabled, List<String> roles) {
         super(username, email);

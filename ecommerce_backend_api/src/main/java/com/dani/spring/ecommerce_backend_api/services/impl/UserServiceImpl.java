@@ -9,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dani.spring.ecommerce_backend_api.dto.UserAdminRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserAdminResponseDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.UserResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.Role;
 import com.dani.spring.ecommerce_backend_api.entities.User;
 import com.dani.spring.ecommerce_backend_api.exceptions.UsernameAlreadyExistsException;

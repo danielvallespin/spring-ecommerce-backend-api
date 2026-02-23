@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,12 +1,10 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 public class UserResponseDto {
 
     private String username;
 
     private String email;
-
-    public UserResponseDto() {}
 
     public UserResponseDto(String username, String email) {
         this.username = username;

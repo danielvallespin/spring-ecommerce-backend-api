@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.FullProductRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.dto.SimpleProductDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 

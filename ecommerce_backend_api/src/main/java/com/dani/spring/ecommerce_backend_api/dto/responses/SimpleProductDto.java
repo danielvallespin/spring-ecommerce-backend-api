@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 import java.math.BigDecimal;
 
@@ -11,8 +11,6 @@ public class SimpleProductDto {
     private Integer stock;
     private String imageUrl;
     private boolean visible;
-
-    public SimpleProductDto(){}
 
     public SimpleProductDto(Long id, String name, String description, BigDecimal price, Integer stock, String imageUrl,
             boolean visible) {

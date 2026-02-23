@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.dto;
+package com.dani.spring.ecommerce_backend_api.dto.requests;
 
 import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
 import com.dani.spring.ecommerce_backend_api.validations.StringSize;
