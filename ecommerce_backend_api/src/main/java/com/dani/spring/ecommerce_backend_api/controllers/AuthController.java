@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@Tag(name = "Autenticación", description = "Endpoints de autenticación y autorización")
+@Tag(name = "Autenticación", description = "API de autenticación y autorización")
 public class AuthController {
 
     @Operation(summary = "Login de usuario (SIN JWT)", 
