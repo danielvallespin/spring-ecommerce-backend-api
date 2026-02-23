@@ -2,6 +2,7 @@ package com.dani.spring.ecommerce_backend_api.dto;
 
 import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
 import com.dani.spring.ecommerce_backend_api.validations.StringSize;
+import com.dani.spring.ecommerce_backend_api.validations.ValidPassword;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -10,15 +11,18 @@ public class UserRequestDto {
 
     @Schema(description = "Username del usuario", example = "dani")
     @IsRequired
+    @StringSize(min=3, max=25)
     private String username;
 
-    @Schema(description = "Password del usuario", example = "1234")
+    @Schema(description = "Password del usuario (Estricta)", example = "App12345")
     @IsRequired
-    @StringSize(min=8, max=20)
+    @ValidPassword
+    @StringSize(max=50)
     private String password;
 
     @Schema(description = "Email del usuario", example = "dani@email.com")
     @IsRequired
+    @StringSize(max=100)
     @Email
     private String email;
 
