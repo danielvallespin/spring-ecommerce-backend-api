@@ -1,12 +1,16 @@
 package com.dani.spring.ecommerce_backend_api.controllers;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +22,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
+import com.dani.spring.ecommerce_backend_api.entities.User;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +54,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UserAdminResponseDto> list(){
-        return service.getAll();
+        return service.getAllusers();
     }
 
     //GET_BY_ID
@@ -61,7 +66,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserAdminResponseDto> getUserById(@PathVariable Long id){
-        UserAdminResponseDto userResponse = service.getResponseById(id);
+        UserAdminResponseDto userResponse = service.getUserResponseById(id);
         if (userResponse == null){
             return ResponseEntity.notFound().build();
         }
@@ -78,7 +83,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserAdminRequestDto user){
-        UserResponseDto newUser = service.save(user);
+        UserResponseDto newUser = service.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
@@ -91,18 +96,47 @@ public class UserController {
     })
     @PostMapping("/singup")
     public ResponseEntity<?> singup(@Valid @RequestBody UserRequestDto user){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveUser(user));
     }
 
 
     //GET_YOU_USER
     @Operation(summary = "Obtener tu propio usuario")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuario obtenido correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+        @ApiResponse(responseCode = "200", description = "Usuario obtenido correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
     })
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
         return ResponseEntity.ok(service.getMyUserResponse(principal.getName()));
+    }
+
+
+    //DELTE_BY_ID
+    @Operation(summary = "Eliminar usuario por id (solo para admins)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado al usuario indicado", content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id){
+        Map<String, Object> data = new HashMap<>();
+
+        Optional<User> optUser = service.getUserById(id);
+        if (optUser.isPresent()){
+            User user = optUser.orElseThrow();
+            service.deleteUserById(user.getId());
+            data.put("message", "El usuario ha sido eliminado correctamente");
+            data.put("userId", user.getId());
+            data.put("username", user.getUsername());
+            return ResponseEntity.ok(data);
+        }
+
+        data.put("message", "El usuario indicado no existe en el sistema");
+        data.put("userId", id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
+
     }
 
 

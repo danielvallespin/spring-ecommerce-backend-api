@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     @Transactional(readOnly=true)
-    public List<SimpleProductDto> findAll() {
+    public List<SimpleProductDto> findAllProducts() {
         List<Product> products = (List<Product>) repository.findAll();
         //Transformamos la lista en una de productos simples para reducir la carga inecesaria de datos
         return products.stream()
@@ -88,6 +88,12 @@ public class ProductServiceImpl implements ProductService{
 
             return product;
         });
+    }
+
+    @Transactional
+    @Override
+    public void deleteProductById(Long id) {
+        repository.deleteById(id);
     }
 
     

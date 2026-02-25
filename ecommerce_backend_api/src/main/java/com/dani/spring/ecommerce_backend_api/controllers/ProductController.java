@@ -1,12 +1,15 @@
 package com.dani.spring.ecommerce_backend_api.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +52,7 @@ public class ProductController {
     })
     @GetMapping
     public ResponseEntity<List<SimpleProductDto>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.findAllProducts());
     }
 
     //GET_BY_ID
@@ -96,6 +99,32 @@ public class ProductController {
             return ResponseEntity.ok(service.modifyFullProduct(productRequest, id));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    //DELETE_BY_ID
+    @Operation(summary = "Eliminar producto por id (solo para admins)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Producto eliminado correctamente", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id){
+        Map<String, Object> data = new HashMap<>();
+
+        Optional<Product> optProduct = service.getProductById(id);
+        if (optProduct.isPresent()){
+            Product product = optProduct.orElseThrow();
+            service.deleteProductById(product.getId());
+            data.put("message", "El producto ha sido eliminado correctamente");
+            data.put("productId", product.getId());
+            data.put("productName", product.getName());
+            return ResponseEntity.ok(data);
+        }
+
+        data.put("message", "El producto indicado no existe en el sistema");
+        data.put("productId", id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
     }
 
 }

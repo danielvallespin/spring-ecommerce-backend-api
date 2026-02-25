@@ -34,15 +34,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public List<UserAdminResponseDto> getAll() {
+    public List<UserAdminResponseDto> getAllusers() {
         List<User> users = (List<User>) repository.findAll();
         return getListOfUserAdminResponse(users);
     }
 
     @Override
     @Transactional(readOnly=true)
-    public UserAdminResponseDto getResponseById(Long id){
-        Optional<User> optUser = getById(id);
+    public UserAdminResponseDto getUserResponseById(Long id){
+        Optional<User> optUser = getUserById(id);
         if (optUser.isPresent()){
             return getUserAdminResponse(optUser.orElseThrow());
         }
@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public Optional<User> getById(Long id){
+    public Optional<User> getUserById(Long id){
         return  repository.getById(id);
     }
 
     @Override
     @Transactional
-    public UserResponseDto save(UserRequestDto user) {
+    public UserResponseDto saveUser(UserRequestDto user) {
         //Validamos que no exista el username y si existe lanzamos excepcion controlada
         if (repository.existsByUsername(user.getUsername())){
             throw new UsernameAlreadyExistsException(String.format("El username %s ya existe, debe utilizar otro.", user.getUsername()));
@@ -94,6 +94,11 @@ public class UserServiceImpl implements UserService{
         return repository.getByUsername(username);
     }
 
+    @Override
+    @Transactional
+    public void deleteUserById(Long id){
+        repository.deleteById(id);
+    }
 
     /**
      * Metodo que devuelve una password ya cifrada 

@@ -10,12 +10,14 @@ import com.dani.spring.ecommerce_backend_api.entities.Product;
 
 public interface ProductService {
     
-    List<SimpleProductDto> findAll();
+    List<SimpleProductDto> findAllProducts();
     
     Optional<Product> getProductById(Long id);
 
     Product createFullProduct(FullProductRequestDto productRequest);
 
     Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id);
+
+    void deleteProductById(Long id);
 
 }

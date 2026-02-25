@@ -10,16 +10,18 @@ import com.dani.spring.ecommerce_backend_api.entities.User;
 
 public interface UserService {
 
-    List<UserAdminResponseDto> getAll();
+    List<UserAdminResponseDto> getAllusers();
 
-    UserAdminResponseDto getResponseById(Long id);
+    UserAdminResponseDto getUserResponseById(Long id);
 
-    Optional<User> getById(Long id);
+    Optional<User> getUserById(Long id);
 
-    UserResponseDto save(UserRequestDto user);
+    UserResponseDto saveUser(UserRequestDto user);
 
     UserResponseDto getMyUserResponse(String username);
 
     Optional<User> getMyUser(String username);
+
+    void deleteUserById(Long id);
 
 }

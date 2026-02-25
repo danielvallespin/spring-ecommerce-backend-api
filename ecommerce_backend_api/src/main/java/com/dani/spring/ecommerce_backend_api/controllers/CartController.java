@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
-import com.dani.spring.ecommerce_backend_api.entities.Cart;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +30,7 @@ public class CartController {
         @ApiResponse(
             responseCode = "200",
             description = "Carrito obtenido correctamente",
-            content = @Content(mediaType = "application/json",schema = @Schema(implementation = Cart.class))),
+            content = @Content(mediaType = "application/json",schema = @Schema(implementation = CartResponseDto.class))),
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping
