@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.Cart;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
-import com.dani.spring.ecommerce_backend_api.utilities.CartUtility;
+import com.dani.spring.ecommerce_backend_api.utils.CartUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

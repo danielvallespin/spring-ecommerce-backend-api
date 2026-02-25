@@ -24,7 +24,7 @@ import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDt
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
-import com.dani.spring.ecommerce_backend_api.utilities.ProductUtility;
+import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

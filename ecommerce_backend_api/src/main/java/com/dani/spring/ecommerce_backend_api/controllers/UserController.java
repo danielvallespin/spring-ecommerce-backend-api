@@ -26,7 +26,7 @@ import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.User;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
-import com.dani.spring.ecommerce_backend_api.utilities.UserUtility;
+import com.dani.spring.ecommerce_backend_api.utils.UserUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

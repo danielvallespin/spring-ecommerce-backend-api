@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.utilities;
+package com.dani.spring.ecommerce_backend_api.utils;
 
 import java.util.List;
 import java.util.Optional;
