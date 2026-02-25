@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
+import com.dani.spring.ecommerce_backend_api.utilities.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -52,53 +54,53 @@ public class ProductController {
     })
     @GetMapping
     public ResponseEntity<List<SimpleProductDto>> getAll() {
-        return ResponseEntity.ok(service.findAllProducts());
+        List<Product> products = service.findAllProducts();
+        return ResponseEntity.ok(ProductUtility.getSimpleProductsList(products));
     }
 
     //GET_BY_ID
     @Operation(summary = "Obtener un producto y su detalle filtrando por la id (SIN JWT)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Producto obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "200", description = "Producto obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullProductResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+    public ResponseEntity<FullProductResponseDto> getProductById(@PathVariable Long id) {
         Optional<Product> optProduct = service.getProductById(id);
-        if (optProduct.isPresent()) {
-            return ResponseEntity.ok(optProduct.orElseThrow());
-        }
-        return ResponseEntity.notFound().build();
+        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+
+        return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(product));
     }
 
     //CREAR
     @Operation(summary = "Insertar un nuevo producto (solo para admins)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Producto creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "201", description = "Producto creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullProductResponseDto.class))),
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody FullProductRequestDto productRequest) {
+    public ResponseEntity<FullProductResponseDto> create(@Valid @RequestBody FullProductRequestDto productRequest) {
+        Product newProduct = service.createFullProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                service.createFullProduct(productRequest)
+                ProductUtility.getFullProductResponseDto(newProduct)
         );
     }
 
     //MODIFICAR
     @Operation(summary = "Modificar datos de un producto ya existente (solo para admins)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Producto modificado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "200", description = "Producto modificado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullProductResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "El producto indicado no se ha encontrado en el sistema", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody ProductUpdateDto productRequest, @PathVariable Long id) {
+    public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateDto productRequest, @PathVariable Long id) {
         Optional<Product> optProduct = service.getProductById(id);
-        if (optProduct.isPresent()) {
-            return ResponseEntity.ok(service.modifyFullProduct(productRequest, id));
-        }
-        return ResponseEntity.notFound().build();
+        Product productMod = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+
+        return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(productMod));
     }
 
     //DELETE_BY_ID
@@ -113,18 +115,13 @@ public class ProductController {
         Map<String, Object> data = new HashMap<>();
 
         Optional<Product> optProduct = service.getProductById(id);
-        if (optProduct.isPresent()){
-            Product product = optProduct.orElseThrow();
-            service.deleteProductById(product.getId());
-            data.put("message", "El producto ha sido eliminado correctamente");
-            data.put("productId", product.getId());
-            data.put("productName", product.getName());
-            return ResponseEntity.ok(data);
-        }
+        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+        service.deleteProductById(product.getId());
+        data.put("message", "El producto ha sido eliminado correctamente");
+        data.put("productId", product.getId());
+        data.put("productName", product.getName());
 
-        data.put("message", "El producto indicado no existe en el sistema");
-        data.put("productId", id);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
+        return ResponseEntity.ok(data);
     }
 
 }

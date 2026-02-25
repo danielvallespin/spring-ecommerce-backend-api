@@ -1,9 +1,11 @@
 package com.dani.spring.ecommerce_backend_api.services;
 
-import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
+import java.util.Optional;
+
+import com.dani.spring.ecommerce_backend_api.entities.Cart;
 
 public interface CartService {
 
-    CartResponseDto getUserCart(String username);
+    Optional<Cart> getUserCart(String username);
 
 }

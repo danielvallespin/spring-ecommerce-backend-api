@@ -2,30 +2,30 @@ package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 public class UserResponseDto {
 
-    private String username;
+    private final Long id;
 
-    private String email;
+    private final String username;
 
-    public UserResponseDto(String username, String email) {
+    private final String email;
+
+    public UserResponseDto(Long id, String username, String email) {
+        this.id = id;
         this.username = username;
         this.email = email;
+    }
+
+    public Long getId(){
+        return id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
 
 }

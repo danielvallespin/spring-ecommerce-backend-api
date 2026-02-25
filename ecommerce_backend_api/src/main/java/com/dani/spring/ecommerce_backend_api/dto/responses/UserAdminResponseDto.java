@@ -4,30 +4,22 @@ import java.util.List;
 
 public class UserAdminResponseDto extends UserResponseDto{
 
-    private boolean enabled;
+    private final Boolean enabled;
 
-    private List<String> roles;
+    private final List<String> roles;
 
-    public UserAdminResponseDto(String username, String email, boolean enabled, List<String> roles) {
-        super(username, email);
+    public UserAdminResponseDto(Long id, String username, String email, Boolean enabled, List<String> roles) {
+        super(id, username, email);
         this.enabled = enabled;
         this.roles = roles;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public List<String> getRoles() {
         return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
     }
 
     

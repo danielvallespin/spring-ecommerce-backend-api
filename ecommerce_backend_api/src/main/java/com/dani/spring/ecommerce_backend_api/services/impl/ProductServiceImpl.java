@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 import com.dani.spring.ecommerce_backend_api.entities.ProductDetail;
 import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;
@@ -23,20 +22,8 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     @Transactional(readOnly=true)
-    public List<SimpleProductDto> findAllProducts() {
-        List<Product> products = (List<Product>) repository.findAll();
-        //Transformamos la lista en una de productos simples para reducir la carga inecesaria de datos
-        return products.stream()
-            .map(product -> new SimpleProductDto(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStock(),
-                product.getImageUrl(),
-                product.isVisible()
-            ))
-            .toList();
+    public List<Product> findAllProducts() {
+        return repository.findAll();
     }
     
     @Override
@@ -62,7 +49,9 @@ public class ProductServiceImpl implements ProductService{
         detail.setLongDescription(productRequest.getLongDescription());
         detail.setBrand(productRequest.getBrand());
         detail.setCategories(productRequest.getCategories());
+        detail.setProduct(product);
 
+        product.setDetail(detail);
         //Guardamos y devolvemos los datos
         return repository.save(product);
     }
@@ -70,7 +59,8 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     @Override
     public Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id) {
-         return repository.findById(id).map(product -> {
+        //Al hacer el map ya actualizamos el producto en db
+         return getProductById(id).map(product -> {
             //Aqui validamos si hay datos de cada campo informados sino se dejaran los ya existentes
             product.setName(productRequest.getName() != null ? productRequest.getName() : product.getName());
             product.setDescription(productRequest.getDescription() != null ? productRequest.getDescription() : product.getDescription());
@@ -96,6 +86,5 @@ public class ProductServiceImpl implements ProductService{
         repository.deleteById(id);
     }
 
-    
 
 }

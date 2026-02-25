@@ -2,15 +2,13 @@ package com.dani.spring.ecommerce_backend_api.repositories;
 
 import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dani.spring.ecommerce_backend_api.entities.User;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> getByUsername(String username);
-
-    Optional<User> getById(Long id);
 
     Boolean existsByUsername(String username);
 

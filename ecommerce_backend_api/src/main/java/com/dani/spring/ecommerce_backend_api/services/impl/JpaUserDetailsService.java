@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dani.spring.ecommerce_backend_api.entities.User;
 import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
 
-//Service para poder hacer login con spring security
+//Service para poder hacer login con spring security JWT
 @Service
 public class JpaUserDetailsService implements UserDetailsService{
 
@@ -40,7 +40,7 @@ public class JpaUserDetailsService implements UserDetailsService{
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), 
                 user.getPassword(), 
-                user.isEnabled(), 
+                user.isEnabled(), //Aqui se valida que el usuario debe estar habilitado para poder iniciar sesion
                 true, 
                 true, 
                 true, 

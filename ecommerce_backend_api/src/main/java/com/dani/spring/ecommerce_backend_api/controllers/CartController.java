@@ -1,6 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.controllers;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
+import com.dani.spring.ecommerce_backend_api.entities.Cart;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
+import com.dani.spring.ecommerce_backend_api.utilities.CartUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +38,9 @@ public class CartController {
     })
     @GetMapping
     public CartResponseDto getUserCart(Principal principal){
-        return service.getUserCart(principal.getName());
+        Optional<Cart> optUserCart = service.getUserCart(principal.getName());
+        Cart userCart = CartUtility.getCartFromOptionalOrThrow(optUserCart);
+        return CartUtility.getCartResponse(userCart);
     }
 
 }

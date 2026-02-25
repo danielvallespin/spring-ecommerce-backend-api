@@ -5,12 +5,11 @@ import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.Product;
 
 public interface ProductService {
     
-    List<SimpleProductDto> findAllProducts();
+    List<Product> findAllProducts();
     
     Optional<Product> getProductById(Long id);
 

@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
@@ -47,12 +46,6 @@ public class User {
     private boolean admin;
 
     private boolean enabled;
-
-    //Siempre que se inserte un nuevo objeto sera enabled
-    @PrePersist
-    public void prePersist(){
-        enabled = true;
-    }
 
     public User(){
         this.roles = new ArrayList<>();
