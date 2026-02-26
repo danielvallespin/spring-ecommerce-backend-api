@@ -1,8 +1,9 @@
-package com.dani.spring.ecommerce_backend_api.entities;
+package com.dani.spring.ecommerce_backend_api.entities.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dani.spring.ecommerce_backend_api.entities.role.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;

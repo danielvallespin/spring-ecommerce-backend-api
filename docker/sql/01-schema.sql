@@ -26,7 +26,7 @@ CREATE TABLE product_details (
 CREATE TABLE users (
     id BIGINT NOT NULL AUTO_INCREMENT,
     username VARCHAR(25) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL,
     enabled TINYINT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -74,8 +74,8 @@ CREATE TABLE cart_items (
 CREATE TABLE wishlist (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
+    name VARCHAR(30) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

@@ -13,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.entities.user.User;
 import com.dani.spring.ecommerce_backend_api.security.TokenJwtData;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -100,6 +100,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> body = new HashMap<>();
+        //Capturamos y mapeamos el error
         body.put("message", "Error en la autenticacion");
         body.put("error", failed.getMessage());
         //Agregar el mapa al response

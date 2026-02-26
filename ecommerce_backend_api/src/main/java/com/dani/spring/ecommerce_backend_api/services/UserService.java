@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
-import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.entities.user.User;
 
 public interface UserService {
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     User saveUser(UserRequestDto user);
 
-    Optional<User> getMyUserByUsername(String username);
+    Optional<User> getUserByUsername(String username);
 
     void deleteUserById(Long id);
 

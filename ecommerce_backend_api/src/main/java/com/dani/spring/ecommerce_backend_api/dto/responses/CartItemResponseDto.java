@@ -2,20 +2,20 @@ package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 public class CartItemResponseDto {
 
-    private ProductCartResponseDto product;
+    private ProductCartOrWishResponseDto product;
 
     private Integer quantity;
 
-    public CartItemResponseDto(ProductCartResponseDto product, Integer quantity) {
+    public CartItemResponseDto(ProductCartOrWishResponseDto product, Integer quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
-    public ProductCartResponseDto getProduct() {
+    public ProductCartOrWishResponseDto getProduct() {
         return product;
     }
 
-    public void setProduct(ProductCartResponseDto product) {
+    public void setProduct(ProductCartOrWishResponseDto product) {
         this.product = product;
     }
 

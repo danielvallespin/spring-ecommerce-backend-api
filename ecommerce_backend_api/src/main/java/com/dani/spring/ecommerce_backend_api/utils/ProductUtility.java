@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
-import com.dani.spring.ecommerce_backend_api.entities.Product;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 
 import jakarta.persistence.EntityNotFoundException;
 

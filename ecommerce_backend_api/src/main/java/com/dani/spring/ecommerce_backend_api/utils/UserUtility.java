@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
-import com.dani.spring.ecommerce_backend_api.entities.Role;
-import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.entities.role.Role;
+import com.dani.spring.ecommerce_backend_api.entities.user.User;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -76,6 +76,15 @@ public class UserUtility {
      */
     public static User getUserFromOptionalOrThrow(Optional<User> optUser, Long id){
         return optUser.orElseThrow(() -> new EntityNotFoundException("No se ha encontrado ningún usuario con id: " + id));
+    }
+
+    /**
+     * Metodo que devuelve un objeto User de un optional, sino lanza error 404 a traves de la clase GlobalExceptionHandler
+     * @param optUser
+     * @return User
+     */
+    public static User getUserFromOptionalOrThrow(Optional<User> optUser){
+        return optUser.orElseThrow(() -> new EntityNotFoundException("El usuario no ha sido encontrado"));
     }
 
 }

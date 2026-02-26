@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
-import com.dani.spring.ecommerce_backend_api.entities.Product;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
@@ -33,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @Tag(name = "Productos", description = "API para gestión de productos")
@@ -97,31 +97,63 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateDto productRequest, @PathVariable Long id) {
-        Optional<Product> optProduct = service.getProductById(id);
-        Product productMod = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
-
+        validateProductExists(id);
+        Optional<Product> optProductMod = service.modifyFullProduct(productRequest, id);
+        Product productMod = ProductUtility.getProductFromOptionalOrThrow(optProductMod, id);
+        
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(productMod));
     }
 
-    //DELETE_BY_ID
-    @Operation(summary = "Eliminar producto por id (solo para admins)")
+    //HABILITAR_VISIBILIDAD
+    @Operation(summary = "Habilitar la visibilidad de un producto por id (solo para admins)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Producto eliminado correctamente", content = @Content),
+        @ApiResponse(responseCode = "200", description = "Producto habilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id){
+    @PatchMapping("/visible/{id}")
+    public ResponseEntity<Map<String, Object>> doVisible(@PathVariable Long id){
         Map<String, Object> data = new HashMap<>();
 
         Optional<Product> optProduct = service.getProductById(id);
         Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
-        service.deleteProductById(product.getId());
-        data.put("message", "El producto ha sido eliminado correctamente");
+        product.setVisible(true);
+        service.saveProduct(product);
+        
+        data.put("message", "El producto ha sido habilitado correctamente");
         data.put("productId", product.getId());
         data.put("productName", product.getName());
-
         return ResponseEntity.ok(data);
+    }
+
+    //DESHABILITAR_VISIBILIDAD
+    @Operation(summary = "Deshabilitar la visibilidad de un producto por id (solo para admins)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Producto deshabilitado correctamente", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/invisible/{id}")
+    public ResponseEntity<Map<String, Object>> doInvisible(@PathVariable Long id){
+        Map<String, Object> data = new HashMap<>();
+
+        Optional<Product> optProduct = service.getProductById(id);
+        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+        product.setVisible(false);
+        service.saveProduct(product);
+        
+        data.put("message", "El producto ha sido deshabilitado correctamente");
+        data.put("productId", product.getId());
+        data.put("productName", product.getName());
+        return ResponseEntity.ok(data);
+    }
+
+
+    private void validateProductExists(Long id){
+        Boolean exists = service.existInDb(id);
+        if (!exists){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + id);
+        }
     }
 
 }

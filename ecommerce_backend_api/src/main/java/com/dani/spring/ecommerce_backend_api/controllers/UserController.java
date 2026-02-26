@@ -24,7 +24,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserAdminResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.UserResponseDto;
-import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.entities.user.User;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 import com.dani.spring.ecommerce_backend_api.utils.UserUtility;
 
@@ -39,7 +39,7 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Users", description = "API para la gestion de usuarios")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -110,8 +110,8 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
-        Optional<User> optUser = service.getMyUserByUsername(principal.getName());
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser, 0L);
+        Optional<User> optUser = service.getUserByUsername(principal.getName());
+        User user = UserUtility.getUserFromOptionalOrThrow(optUser);
         return ResponseEntity.ok(UserUtility.getUserResponse(user));
     }
 
@@ -147,8 +147,8 @@ public class UserController {
     public ResponseEntity<Map<String, String>> changePassword(Principal principal, @RequestBody ChangePasswordRequestDto request){
         Map<String, String> data = new HashMap<>();
 
-        Optional<User> optUser = service.getMyUserByUsername(principal.getName());
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser, 0L);
+        Optional<User> optUser = service.getUserByUsername(principal.getName());
+        User user = UserUtility.getUserFromOptionalOrThrow(optUser);
         user.setPassword(service.encodePasswd(request.getPassword()));
         service.saveUser(user);
         data.put("message", "Contraseña modificada correctamente");

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
-import com.dani.spring.ecommerce_backend_api.entities.Cart;
+import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.utils.CartUtility;
 

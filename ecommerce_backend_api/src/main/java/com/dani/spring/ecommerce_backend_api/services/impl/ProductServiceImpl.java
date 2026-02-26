@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.entities.Product;
-import com.dani.spring.ecommerce_backend_api.entities.ProductDetail;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+import com.dani.spring.ecommerce_backend_api.entities.product.ProductDetail;
 import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 
@@ -30,6 +30,12 @@ public class ProductServiceImpl implements ProductService{
     @Transactional(readOnly=true)
     public Optional<Product> getProductById(Long id) {
         return repository.findById(id);
+    }
+
+    @Transactional
+    @Override
+    public Product saveProduct(Product product) {
+        return repository.save(product);
     }
 
     @Override
@@ -53,7 +59,7 @@ public class ProductServiceImpl implements ProductService{
 
         product.setDetail(detail);
         //Guardamos y devolvemos los datos
-        return repository.save(product);
+        return saveProduct(product);
     }
 
     @Transactional
@@ -80,11 +86,11 @@ public class ProductServiceImpl implements ProductService{
         });
     }
 
-    @Transactional
     @Override
-    public void deleteProductById(Long id) {
-        repository.deleteById(id);
+    public Boolean existInDb(Long id) {
+        return repository.existsById(id);
     }
+
 
 
 }

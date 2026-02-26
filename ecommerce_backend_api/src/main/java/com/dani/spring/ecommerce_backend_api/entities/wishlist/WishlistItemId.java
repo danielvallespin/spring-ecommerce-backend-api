@@ -1,26 +1,27 @@
-package com.dani.spring.ecommerce_backend_api.entities;
+package com.dani.spring.ecommerce_backend_api.entities.wishlist;
 
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class CartItemId {
+public class WishlistItemId {
 
-    private Long cartId;
+    private Long wishlistId;
+
     private Long productId;
 
-    public CartItemId() {}
+    public WishlistItemId() {}
 
-    public CartItemId(Long cartId, Long productId) {
-        this.cartId = cartId;
+    public WishlistItemId(Long wishlistId, Long productId) {
+        this.wishlistId = wishlistId;
         this.productId = productId;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getWishlistId() {
+        return wishlistId;
     }
 
-    public void setCartId(Long cartId) {
-        this.cartId = cartId;
+    public void setWishlistId(Long wishlistId) {
+        this.wishlistId = wishlistId;
     }
 
     public Long getProductId() {
@@ -35,7 +36,7 @@ public class CartItemId {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((cartId == null) ? 0 : cartId.hashCode());
+        result = prime * result + ((wishlistId == null) ? 0 : wishlistId.hashCode());
         result = prime * result + ((productId == null) ? 0 : productId.hashCode());
         return result;
     }
@@ -48,11 +49,11 @@ public class CartItemId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CartItemId other = (CartItemId) obj;
-        if (cartId == null) {
-            if (other.cartId != null)
+        WishlistItemId other = (WishlistItemId) obj;
+        if (wishlistId == null) {
+            if (other.wishlistId != null)
                 return false;
-        } else if (!cartId.equals(other.cartId))
+        } else if (!wishlistId.equals(other.wishlistId))
             return false;
         if (productId == null) {
             if (other.productId != null)

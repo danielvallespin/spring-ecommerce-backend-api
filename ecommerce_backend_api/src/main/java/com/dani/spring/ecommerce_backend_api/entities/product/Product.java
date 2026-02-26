@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.entities;
+package com.dani.spring.ecommerce_backend_api.entities.product;
 
 import java.math.BigDecimal;
 

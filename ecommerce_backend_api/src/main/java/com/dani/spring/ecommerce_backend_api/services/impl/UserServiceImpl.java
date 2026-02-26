@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
-import com.dani.spring.ecommerce_backend_api.entities.Role;
-import com.dani.spring.ecommerce_backend_api.entities.User;
+import com.dani.spring.ecommerce_backend_api.entities.role.Role;
+import com.dani.spring.ecommerce_backend_api.entities.user.User;
 import com.dani.spring.ecommerce_backend_api.exceptions.UsernameAlreadyExistsException;
 import com.dani.spring.ecommerce_backend_api.repositories.RoleRepository;
 import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public Optional<User> getMyUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         return repository.getByUsername(username);
     }
 

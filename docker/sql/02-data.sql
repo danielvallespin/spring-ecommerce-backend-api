@@ -79,11 +79,12 @@ INSERT INTO cart_items (cart_id, product_id, quantity) VALUES
 -- ======================================
 -- Wishlists
 -- ======================================
-INSERT INTO wishlist (user_id) VALUES
-(1),
-(2),
-(3),
-(4);
+INSERT INTO wishlist (user_id, name) VALUES
+(1, 'Lista deseos'),
+(1, 'Gaming'),
+(2, 'Lista deseos'),
+(3, 'Lista deseos'),
+(4, 'Lista deseos');
 
 -- ======================================
 -- Wishlist Items

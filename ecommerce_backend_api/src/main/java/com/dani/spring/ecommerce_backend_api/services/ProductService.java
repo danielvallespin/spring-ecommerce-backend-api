@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
-import com.dani.spring.ecommerce_backend_api.entities.Product;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 
 public interface ProductService {
     
@@ -17,6 +17,8 @@ public interface ProductService {
 
     Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id);
 
-    void deleteProductById(Long id);
+    Product saveProduct(Product product);
+
+    Boolean existInDb(Long id);
 
 }

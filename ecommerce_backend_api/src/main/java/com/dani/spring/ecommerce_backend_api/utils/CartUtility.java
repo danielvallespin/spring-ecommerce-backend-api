@@ -6,10 +6,10 @@ import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartItemResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
-import com.dani.spring.ecommerce_backend_api.dto.responses.ProductCartResponseDto;
-import com.dani.spring.ecommerce_backend_api.entities.Cart;
-import com.dani.spring.ecommerce_backend_api.entities.CartItem;
-import com.dani.spring.ecommerce_backend_api.entities.Product;
+import com.dani.spring.ecommerce_backend_api.dto.responses.ProductCartOrWishResponseDto;
+import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
+import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -35,24 +35,25 @@ public class CartUtility {
     private static List<CartItemResponseDto> getCartItemsListResponse(List<CartItem> items) {
         List<CartItemResponseDto> response = new ArrayList<>();
         for (CartItem item : items) {
-            response.add(new CartItemResponseDto(getProductCartResponse(item.getProduct()), item.getQuantity()));
+            response.add(new CartItemResponseDto(getProductCartOrWishResponse(item.getProduct()), item.getQuantity()));
         }
 
         return response;
     }
 
     /**
-     * Metodo para obtener objeto dto respuesta de producto del carrito
+     * Metodo para obtener objeto dto respuesta de producto del carrito o wishlist
      *
      * @param product
-     * @return ProductCartResponseDto
+     * @return ProductCartOrWishResponseDto
      */
-    private static ProductCartResponseDto getProductCartResponse(Product product) {
-        return new ProductCartResponseDto(
+    public static ProductCartOrWishResponseDto getProductCartOrWishResponse(Product product) {
+        return new ProductCartOrWishResponseDto(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getStock(),
                 product.getImageUrl(),
                 product.getDetail().getBrand()
         );

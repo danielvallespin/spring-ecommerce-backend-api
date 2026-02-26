@@ -2,7 +2,7 @@ package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 import java.math.BigDecimal;
 
-public class ProductCartResponseDto {
+public class ProductCartOrWishResponseDto {
 
     private Long id;
 
@@ -12,15 +12,18 @@ public class ProductCartResponseDto {
 
     private BigDecimal price;
 
+    private Integer stock;
+
     private String imageUrl;
 
     private String brand;
 
-    public ProductCartResponseDto(Long id, String name, String description, BigDecimal price, String imageUrl, String brand) {
+    public ProductCartOrWishResponseDto(Long id, String name, String description, BigDecimal price, Integer stock, String imageUrl, String brand) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.stock = stock;
         this.imageUrl = imageUrl;
         this.brand = brand;
     }
@@ -73,6 +76,13 @@ public class ProductCartResponseDto {
         this.brand = brand;
     }
 
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
     
 
 }

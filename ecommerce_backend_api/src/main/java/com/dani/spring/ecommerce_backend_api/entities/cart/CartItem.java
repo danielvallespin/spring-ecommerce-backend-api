@@ -1,5 +1,6 @@
-package com.dani.spring.ecommerce_backend_api.entities;
+package com.dani.spring.ecommerce_backend_api.entities.cart;
 
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Table(name="cart_items")
@@ -19,7 +21,7 @@ public class CartItem {
 
     //FK cart id
     @JsonIgnore
-    @ManyToOne
+    @OneToOne
     @MapsId("cartId")
     @JoinColumn(name = "cart_id")
     private Cart cart;
@@ -33,7 +35,7 @@ public class CartItem {
     @Column(nullable = false)
     private int quantity;
 
-    public CartItem() {}
+    public CartItem(){}
 
     public CartItem(Cart cart, Product product, int quantity) {
         this.cart = cart;

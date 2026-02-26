@@ -1,4 +1,4 @@
-package com.dani.spring.ecommerce_backend_api.entities;
+package com.dani.spring.ecommerce_backend_api.entities.role;
 
 import com.dani.spring.ecommerce_backend_api.validations.IsRequired;
 
