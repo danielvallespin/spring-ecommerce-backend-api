@@ -91,7 +91,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Optional<CartItem> getCartItemById(Long productId, String username) {
         Cart cart = getUserCart(username).orElseThrow();
-        return cartItemRepository.findById(new CartItemId(cart.getId(), productId));
+        return getCartItemById(new CartItemId(cart.getId(), productId));
     }
 
     @Transactional(readOnly=true)
