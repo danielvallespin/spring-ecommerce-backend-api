@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Carrito de compra", description = "API para la gestión del carrito")
+@Tag(name = "4. Carrito de compra", description = "API para la gestión del carrito")
 @RestController
 @RequestMapping("/cart")
 public class CartController {

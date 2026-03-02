@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
-@Tag(name = "Productos", description = "API para gestión de productos")
+@Tag(name = "3. Productos", description = "API para gestión de productos")
 @RestController
 @RequestMapping("/product")
 public class ProductController {

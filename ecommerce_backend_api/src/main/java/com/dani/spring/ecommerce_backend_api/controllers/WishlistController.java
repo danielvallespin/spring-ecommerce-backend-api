@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Wishlist", description = "API para la gestion de la lista de deseos")
+@Tag(name = "5. Wishlist", description = "API para la gestion de la lista de deseos")
 @RestController
 @RequestMapping("/wishlist")
 public class WishlistController {

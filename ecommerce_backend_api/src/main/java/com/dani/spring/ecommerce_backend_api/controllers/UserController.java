@@ -37,7 +37,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Users", description = "API para la gestion de usuarios")
+@Tag(name = "2. Users", description = "API para la gestion de usuarios")
 @RestController
 @RequestMapping("/user")
 public class UserController {
