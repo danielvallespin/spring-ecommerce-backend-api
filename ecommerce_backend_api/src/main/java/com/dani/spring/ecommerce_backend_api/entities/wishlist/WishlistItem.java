@@ -34,6 +34,8 @@ public class WishlistItem {
 
     public WishlistItem(Wishlist wishlist, Product product) {
         this.id = new WishlistItemId(wishlist.getId(), product.getId());
+        this.wishlist = wishlist;
+        this.product = product;
     }
 
     public WishlistItemId getId() {

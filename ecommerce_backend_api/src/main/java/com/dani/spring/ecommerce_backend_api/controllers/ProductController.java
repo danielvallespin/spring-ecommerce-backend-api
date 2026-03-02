@@ -149,6 +149,10 @@ public class ProductController {
     }
 
 
+    /**
+     * Metodo que valida la existencia del producto en la db (Devuelve 404 si no existe)
+     * @param id
+     */
     private void validateProductExists(Long id){
         Boolean exists = service.existInDb(id);
         if (!exists){

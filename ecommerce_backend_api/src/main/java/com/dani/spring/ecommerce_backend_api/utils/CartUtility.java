@@ -83,6 +83,11 @@ public class CartUtility {
     }
 
 
+    /**
+     * Metodo de validacion para no superar el stock disponible (si no se supera devuelve un 409)
+     * @param stockRequest
+     * @param stockProduct
+     */
     public static void validateAvailableStock(Integer stockRequest, Integer stockProduct){
         if(stockRequest > stockProduct){
             throw new InsufficientStockException("Stock insuficiente", stockProduct);

@@ -24,6 +24,7 @@ import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.utils.CartUtility;
+import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,17 +49,15 @@ public class CartController {
     @Operation(summary = "Obtener tu carrito de compra")
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "200",
-            description = "Carrito obtenido correctamente",
-            content = @Content(mediaType = "application/json",schema = @Schema(implementation = CartResponseDto.class))),
-    })
+                responseCode = "200",
+                description = "Carrito obtenido correctamente",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),})
     @GetMapping
-    public ResponseEntity<CartResponseDto> getUserCart(Principal principal){
+    public ResponseEntity<CartResponseDto> getUserCart(Principal principal) {
         Optional<Cart> optUserCart = service.getUserCart(principal.getName());
         Cart userCart = CartUtility.getCartFromOptionalOrThrow(optUserCart);
         return ResponseEntity.ok(CartUtility.getCartResponse(userCart));
     }
-
 
     //ADD_PRODCUT
     @Operation(summary = "Agregar un producto al carrito")
@@ -69,32 +68,33 @@ public class CartController {
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PostMapping("/add-item")
-    public ResponseEntity<Map<String, String>> addProductToCart(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal){
-        //Validacion de la existencia del producto
+    public ResponseEntity<Map<String, String>> addProductToCart(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
+        //Obtenemos el producto Optional
         Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        if (optProduct.isPresent()){
-            Product product = optProduct.orElseThrow();
-            //Validacion para no superar el stock disponible
-            Optional<CartItem> optCartItem = service.getCartItemById(product.getId(), principal.getName());
-            if (optCartItem.isPresent()){
-                CartItem cartItem = optCartItem.orElseThrow();
-                //Validacion para no superar el stock disponible
-                Integer totalQuantity = request.getQuantity() + cartItem.getQuantity();
-                CartUtility.validateAvailableStock(totalQuantity, product.getStock());
-                //Incrementar
-                service.updateProductQuantity(product.getId(), totalQuantity, principal.getName());
-                return ResponseEntity.ok(Map.of("message","Producto ha sido incrementado en " + request.getQuantity()));
-            } else{
-                //Validacion para no superar el stock disponible
-                CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
-                //Agregar
-                service.addProductToCart(product, request.getQuantity(), principal.getName());
-                return ResponseEntity.ok(Map.of("message","Producto agregado al carrito correctamente"));
-            }
-        }
-        return CartUtility.getProductNotFoundMessage();
-    }
+        //Transformamos a objeto Product (si no existe devuelve un 404)
+        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, request.getProductId());
 
+        //Validacion para no superar el stock disponible
+        Optional<CartItem> optCartItem = service.getCartItemById(product.getId(), principal.getName());
+        if (optCartItem.isPresent()) {
+            CartItem cartItem = optCartItem.orElseThrow();
+
+            //Validacion para no superar el stock disponible
+            Integer totalQuantity = request.getQuantity() + cartItem.getQuantity();
+            CartUtility.validateAvailableStock(totalQuantity, product.getStock());
+
+            //Incrementar
+            service.updateProductQuantity(product.getId(), totalQuantity, principal.getName());
+            return ResponseEntity.ok(Map.of("message", "Producto ha sido incrementado en " + request.getQuantity()));
+        } else {
+            //Validacion para no superar el stock disponible
+            CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
+
+            //Agregar
+            service.addProductToCart(product, request.getQuantity(), principal.getName());
+            return ResponseEntity.ok(Map.of("message", "Producto agregado al carrito correctamente"));
+        }
+    }
 
     //DELETE_PRODUCT
     @Operation(summary = "Eliminar un producto del carrito")
@@ -103,23 +103,24 @@ public class CartController {
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
         @ApiResponse(responseCode = "404", description = "El producto indicado no existe", content = @Content)
     })
-    @DeleteMapping("/del-item")
-    public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody DelProductFromCartRequestDto request, Principal principal){
+    @DeleteMapping("/delete-item")
+    public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody DelProductFromCartRequestDto request, Principal principal) {
         //Validacion de la existencia del producto
         Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        if (optProduct.isPresent()){
+        if (optProduct.isPresent()) {
+
             //Validacion de si el producto no esta en carrito para no hacer nada
             boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
-            if (!alreadyExists){
+            if (!alreadyExists) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
             }
+
             //Eliminamos
             service.removeProductFromCart(request.getProductId(), principal.getName());
-            return ResponseEntity.ok(Map.of("message","Producto eliminado del carrito correctamente"));
+            return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
         }
         return CartUtility.getProductNotFoundMessage();
     }
-
 
     //CHANGE_QUANTITY
     @Operation(summary = "Cambiar cantidad de producto del carrito")
@@ -131,40 +132,43 @@ public class CartController {
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PutMapping("/change-quantity")
-    public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal){
-        //Validacion de la existencia del producto
+    public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
+        //Obtenemos el producto Optional
         Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        if (optProduct.isPresent()){
-            Product product = optProduct.orElseThrow();
-            //Validacion para comprobar que el producto este en el carrito
-            boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
-            if (!alreadyExists){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
-            }
-            //Si la cantidad es 0 lo eliminamos
-            if(request.getQuantity() <= 0){
-                service.removeProductFromCart(request.getProductId(),   principal.getName());
-                return ResponseEntity.ok(Map.of("message","Producto eliminado del carrito correctamente"));
-            }
-            //Validacion del stock disponible para poder cambiar o no
-            CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
-            //Modificamos
-            service.updateProductQuantity(request.getProductId(), request.getQuantity(), principal.getName());
-            return ResponseEntity.ok(Map.of("message","Cantidad del producto modificada correctamente"));
+        //Transformamos a objeto Product (si no existe devuelve un 404)
+        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, request.getProductId());
+
+        //Validacion para comprobar que el producto este en el carrito
+        boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
+        if (!alreadyExists) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
         }
-        return CartUtility.getProductNotFoundMessage();
+
+        //Si la cantidad es 0 lo eliminamos
+        if (request.getQuantity() <= 0) {
+            service.removeProductFromCart(request.getProductId(), principal.getName());
+            return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
+        }
+
+        //Validacion del stock disponible para poder cambiar o no
+        CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
+
+        //Modificamos
+        service.updateProductQuantity(request.getProductId(), request.getQuantity(), principal.getName());
+
+        return ResponseEntity.ok(Map.of("message", "Cantidad del producto modificada correctamente"));
     }
 
     //DELETE_ALL_ITEMS
     @Operation(summary = "Vaciar carrito")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "El carrito se ha vaciado correctamente", content = @Content),
+        @ApiResponse(responseCode = "200", description = "El carrito se ha vaciado correctamente", content = @Content)
     })
     @DeleteMapping("/empty")
-    public ResponseEntity<Map<String, String>> emptyCart(Principal principal){
+    public ResponseEntity<Map<String, String>> emptyCart(Principal principal) {
         //Vaciamos el carrito
         service.emptyCart(principal.getName());
-        return ResponseEntity.ok(Map.of("message","El carrito se ha vaciado correctamente"));
+        return ResponseEntity.ok(Map.of("message", "El carrito se ha vaciado correctamente"));
     }
 
 }

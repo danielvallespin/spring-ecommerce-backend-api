@@ -55,7 +55,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/all")
     public List<UserAdminResponseDto> list(){
         List<User> users = service.getAllusers();
         return UserUtility.getListOfUserAdminResponse(users);
@@ -143,7 +143,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "No se ha enocntrado al usuario indicado", content = @Content)
     })
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/password")
+    @PatchMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(Principal principal, @RequestBody ChangePasswordRequestDto request){
         Map<String, String> data = new HashMap<>();
 
