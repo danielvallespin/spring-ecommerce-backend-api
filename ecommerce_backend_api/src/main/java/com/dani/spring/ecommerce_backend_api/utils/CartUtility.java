@@ -58,7 +58,6 @@ public class CartUtility {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getStock(),
                 product.getImageUrl(),
                 product.getDetail().getBrand()
         );

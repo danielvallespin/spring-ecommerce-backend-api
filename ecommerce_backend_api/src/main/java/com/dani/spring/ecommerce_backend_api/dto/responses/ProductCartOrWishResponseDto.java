@@ -12,18 +12,15 @@ public class ProductCartOrWishResponseDto {
 
     private BigDecimal price;
 
-    private Integer stock;
-
     private String imageUrl;
 
     private String brand;
 
-    public ProductCartOrWishResponseDto(Long id, String name, String description, BigDecimal price, Integer stock, String imageUrl, String brand) {
+    public ProductCartOrWishResponseDto(Long id, String name, String description, BigDecimal price, String imageUrl, String brand) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.stock = stock;
         this.imageUrl = imageUrl;
         this.brand = brand;
     }
@@ -76,13 +73,6 @@ public class ProductCartOrWishResponseDto {
         this.brand = brand;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
     
 
 }
