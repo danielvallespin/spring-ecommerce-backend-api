@@ -28,6 +28,13 @@ public class CartServiceImpl implements CartService {
         return repository.findByUserId(user.getId());
     }
 
+    @Override
+    public Cart createCart(User user) {
+        Cart newCart = new Cart();
+        newCart.setUser(user);
+        return repository.save(newCart);
+    }
+
 
 
 

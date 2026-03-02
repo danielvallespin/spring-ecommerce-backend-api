@@ -17,6 +17,7 @@ import com.dani.spring.ecommerce_backend_api.exceptions.UsernameAlreadyExistsExc
 import com.dani.spring.ecommerce_backend_api.repositories.RoleRepository;
 import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
+import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -29,6 +30,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    CartServiceImpl cartService;
+
+    @Autowired
+    WishlistService wishlistService;
 
     @Override
     @Transactional(readOnly=true)
@@ -50,7 +57,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User saveUser(UserRequestDto user) {
+    public User createUser(UserRequestDto user) {
         //Validamos que no exista el username y si existe lanzamos excepcion controlada
         if (repository.existsByUsername(user.getUsername())){
             throw new UsernameAlreadyExistsException(String.format("El username %s ya existe, debe utilizar otro.", user.getUsername()));
@@ -66,6 +73,8 @@ public class UserServiceImpl implements UserService{
         newUser.setRoles(roles);
         
         saveUser(newUser);
+        cartService.createCart(newUser);
+        wishlistService.createWishlist(newUser, "Lista de deseados");
 
         return newUser;
     }

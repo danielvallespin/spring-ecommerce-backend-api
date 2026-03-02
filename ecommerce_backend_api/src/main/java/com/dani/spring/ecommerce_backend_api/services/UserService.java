@@ -12,7 +12,7 @@ public interface UserService {
 
     Optional<User> getUserById(Long id);
 
-    User saveUser(UserRequestDto user);
+    User createUser(UserRequestDto user);
 
     Optional<User> getUserByUsername(String username);
 
@@ -20,6 +20,6 @@ public interface UserService {
 
     User saveUser(User user);
 
-    public String encodePasswd(String str);
+    String encodePasswd(String str);
 
 }

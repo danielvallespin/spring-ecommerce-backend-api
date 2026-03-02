@@ -84,7 +84,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserAdminRequestDto user){
-        User newUser = service.saveUser(user);
+        User newUser = service.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserUtility.getUserAdminResponse(newUser));
     }
 
@@ -97,7 +97,7 @@ public class UserController {
     })
     @PostMapping("/singup")
     public ResponseEntity<?> singup(@Valid @RequestBody UserRequestDto user){
-        User newUser = service.saveUser(user);
+        User newUser = service.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserUtility.getUserResponse(newUser));
     }
 
