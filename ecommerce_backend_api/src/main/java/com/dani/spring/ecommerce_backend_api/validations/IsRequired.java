@@ -8,10 +8,7 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Constraint(validatedBy = {
-    RequiredStringValidation.class,
-    RequiredNumberValidation.class
-})
+@Constraint(validatedBy = RequiredStringValidation.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface IsRequired {

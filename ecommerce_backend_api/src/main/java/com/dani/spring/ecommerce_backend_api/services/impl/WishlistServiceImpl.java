@@ -24,6 +24,7 @@ public class WishlistServiceImpl implements WishlistService {
         return repository.findByUserId(userId);
     }
 
+    @Transactional
     @Override
     public Wishlist createWishlist(User user, String name) {
         Wishlist wishlist = new Wishlist();

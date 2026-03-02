@@ -73,7 +73,9 @@ public class UserServiceImpl implements UserService{
         newUser.setRoles(roles);
         
         saveUser(newUser);
+        //Creamos un carrito y lo asignamos a este usuario
         cartService.createCart(newUser);
+        //Creamos una lista de deseados inicial y lo asignamos a este usuario
         wishlistService.createWishlist(newUser, "Lista de deseados");
 
         return newUser;

@@ -50,9 +50,7 @@ public class GlobalExceptionHandler {
 
     //Excepcion para cuando el usermane introducido ya existe
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<?> handleUsernameExists(
-            UsernameAlreadyExistsException ex) {
-
+    public ResponseEntity<?> handleUsernameExists(UsernameAlreadyExistsException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "USERNAME_ALREADY_EXISTS");
         body.put("message", ex.getMessage());
@@ -69,5 +67,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    
+    //Excepcion para cuando se intenta agregar o adquirir mas stock del disponible
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<?> handleInsuffcientStock(InsufficientStockException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "INSUFFICIENT_STOCK");
+        body.put("message", ex.getMessage());
+        body.put("availableStock", ex.getAvailableStock());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+    
 
 }

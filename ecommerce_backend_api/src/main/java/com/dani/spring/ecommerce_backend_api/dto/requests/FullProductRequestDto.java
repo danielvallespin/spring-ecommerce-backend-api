@@ -7,6 +7,7 @@ import com.dani.spring.ecommerce_backend_api.validations.NumberRange;
 import com.dani.spring.ecommerce_backend_api.validations.StringSize;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 public class FullProductRequestDto {
 
@@ -22,12 +23,12 @@ public class FullProductRequestDto {
     private String description;
 
     @Schema(description = "Precio del producto", example = "499.95")
-    @IsRequired
+    @NotNull
     @NumberRange(min=0)
     private BigDecimal price;
 
     @Schema(description = "Cantidad de stock del producto", example = "20")
-    @IsRequired
+    @NotNull
     @NumberRange(min=0)
     private Integer stock;
 

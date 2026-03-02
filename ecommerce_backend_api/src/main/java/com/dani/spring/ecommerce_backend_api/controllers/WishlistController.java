@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Wishlist", description = "API para la gestion de la lista de deseos")
 @RestController
-@RequestMapping("wishlist")
+@RequestMapping("/wishlist")
 public class WishlistController {
 
     @Autowired

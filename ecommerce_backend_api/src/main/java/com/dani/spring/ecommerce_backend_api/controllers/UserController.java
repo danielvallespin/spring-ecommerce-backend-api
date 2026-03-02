@@ -39,7 +39,7 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Users", description = "API para la gestion de usuarios")
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
