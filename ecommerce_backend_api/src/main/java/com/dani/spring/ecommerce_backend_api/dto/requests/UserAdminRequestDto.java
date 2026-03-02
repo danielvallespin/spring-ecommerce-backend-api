@@ -10,6 +10,8 @@ public class UserAdminRequestDto extends UserRequestDto{
     @Schema(description = "El usuario esta activado (Opcional, por defecto true)", example = "true")
     private Boolean enabled;
 
+    public UserAdminRequestDto(){
+    }
 
     public Boolean isEnabled() {
         return enabled;

@@ -7,12 +7,12 @@ import jakarta.validation.constraints.NotNull;
 
 public class AddOrModProductCartRequestDto {
 
-    @Schema(description = "Id del producto a añadir", example = "12")
+    @Schema(description = "Id del producto", example = "4")
     @NotNull
     @NumberRange(min=0)
     private Long productId;
 
-    @Schema(description = "Cantidad a añadir", example = "3")
+    @Schema(description = "Cantidad", example = "3")
     @NotNull
     @NumberRange(min=0)
     private Integer quantity;

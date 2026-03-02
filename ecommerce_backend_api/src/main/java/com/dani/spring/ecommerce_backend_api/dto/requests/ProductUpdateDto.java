@@ -43,6 +43,8 @@ public class ProductUpdateDto {
     @Schema(description = "Categorias a las que pertenece el produto", example = "electronica,gaming")
     private String categories;
 
+    public ProductUpdateDto(){
+    }
     
     public String getName() {
         return name;

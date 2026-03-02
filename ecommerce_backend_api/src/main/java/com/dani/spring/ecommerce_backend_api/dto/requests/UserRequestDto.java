@@ -26,7 +26,6 @@ public class UserRequestDto {
     @Email
     private String email;
 
-    
     public UserRequestDto() {}
 
     public UserRequestDto(String username, String password, @Email String email) {

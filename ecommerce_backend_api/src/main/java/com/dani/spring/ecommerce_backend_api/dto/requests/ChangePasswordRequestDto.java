@@ -14,6 +14,9 @@ public class ChangePasswordRequestDto {
     @StringSize(max=50)
     private String password;
 
+    public ChangePasswordRequestDto(){
+    }
+
     public String getPassword() {
         return password;
     }
