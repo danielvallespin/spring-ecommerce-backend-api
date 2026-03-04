@@ -135,9 +135,11 @@ INSERT INTO order_payments (order_id, card_id, amount) VALUES
 -- ======================================
 -- Reviews
 -- ======================================
-INSERT INTO reviews (user_id, product_id, rating, title, comment) VALUES
-(1, 1, 5, 'Muy buen laptop', 'La calidad es excelente y el rendimiento perfecto.'),
-(1, 4, 4, 'Teclado bueno', 'Es cómodo algo pequeño.'),
-(2, 2, 2, 'Telefono normales', 'El diseño me gusta pero no es lo que esperaba.'),
-(3, 5, 5, 'Mouse top', 'Funcionalidades muy completas y diseño elegante.'),
-(3, 3, 4, 'Monitor que cumple', 'Buena prestaciones y calidad, pero algo caro.');
+INSERT INTO reviews (user_id, product_id, rating, title, comment, purchased) VALUES
+(1, 1, 5, 'Muy buen laptop', 'La calidad es excelente y el rendimiento perfecto.', 1),
+(1, 4, 4, 'Teclado bueno', 'Es cómodo algo pequeño.', 1),
+(2, 2, 2, 'Telefono normales', 'El diseño me gusta pero no es lo que esperaba.', 1),
+(3, 5, 5, 'Mouse top', 'Funcionalidades muy completas y diseño elegante.', 1),
+(3, 3, 4, 'Monitor que cumple', 'Buena prestaciones y calidad, pero algo caro.', 1),
+(2, 5, 1, 'Tuve este mouse y no me gustó', 'Mala calidad y rendimiento.', 0),
+(3, 4, 3, 'Teclado normal', 'Esta bien, sin mas.', 0);

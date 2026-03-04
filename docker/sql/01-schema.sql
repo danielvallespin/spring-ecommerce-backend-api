@@ -142,8 +142,9 @@ CREATE TABLE reviews (
     user_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    title VARCHAR(100),
-    comment TEXT,
+    title VARCHAR(100) NOT NULL,
+    comment TEXT NOT NULL,
+    purchased TINYINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id),
