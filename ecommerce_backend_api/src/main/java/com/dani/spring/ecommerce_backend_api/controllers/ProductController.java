@@ -1,5 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.controllers;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDt
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
+import com.dani.spring.ecommerce_backend_api.services.UserService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,18 +45,34 @@ public class ProductController {
     @Autowired
     ProductService service;
 
+    @Autowired
+    UserService userService;
+
     //GET_ALL
     @Operation(summary = "Obtener todos los productos (SIN JWT)")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
             description = "Lista obtenida correctamente",
-            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleProductDto.class)))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleProductDto.class))))
     })
     @GetMapping
-    public ResponseEntity<List<SimpleProductDto>> getAll() {
-        List<Product> products = service.findAllProducts();
+    public ResponseEntity<List<SimpleProductDto>> getAll(Principal principal) {
+        List<Product> products = new ArrayList<>();
+
+        //Comprobamos si el usuario es admin
+        boolean isAdmin = false;
+        if (principal != null){
+            isAdmin = userService.isAdmin(principal.getName());
+        }
+
+        //Si es admin podra ver los productos no visibles
+        if (isAdmin){
+            products = service.findAllProducts();
+        } else {
+            products = service.findAllProductsWithoutInvisibles();
+        }
+    
         return ResponseEntity.ok(ProductUtility.getSimpleProductsList(products));
     }
 
@@ -61,13 +80,23 @@ public class ProductController {
     @Operation(summary = "Obtener un producto y su detalle filtrando por la id (SIN JWT)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullProductResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
     })
     @GetMapping("/{productId}")
-    public ResponseEntity<FullProductResponseDto> getProductById(@PathVariable Long productId) {
+    public ResponseEntity<FullProductResponseDto> getProductById(@PathVariable Long productId, Principal principal) {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = service.getProductById(productId);
+
+        //En caso de ser un producto no visible tenemos que verificar que el usuario sea admin
+        if (!product.isVisible()){
+            boolean isAdmin = false;
+            if (principal != null){
+                isAdmin = userService.isAdmin(principal.getName());
+            }
+            if(!isAdmin){
+                throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + productId);
+            }
+        }
 
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(product));
     }

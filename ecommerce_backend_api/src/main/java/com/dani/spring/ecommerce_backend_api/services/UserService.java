@@ -21,4 +21,6 @@ public interface UserService {
 
     String encodePasswd(String str);
 
+    boolean isAdmin(String username);
+
 }

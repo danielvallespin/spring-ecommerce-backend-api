@@ -52,8 +52,20 @@ public class UserServiceImpl implements UserService{
         if (!optUser.isPresent()){
             throw new EntityNotFoundException("No se ha encontrado ningún usuario con id: " + userId);
         }
+
+        User user = optUser.orElseThrow();
+        user.setAdmin(validateAdminRoleUserDb(user.getRoles()));
         
-        return optUser.orElseThrow();
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public User getUserByUsername(String username) {
+        User user = repository.getByUsername(username).orElseThrow();
+        user.setAdmin(validateAdminRoleUserDb(user.getRoles()));
+        
+        return user;
     }
 
     @Transactional
@@ -89,17 +101,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public User getUserByUsername(String username) {
-        return repository.getByUsername(username).orElseThrow();
-    }
-
-    @Override
     @Transactional
     public void deleteUserById(Long userId){
         repository.deleteById(userId);
     }
 
+    @Override
+    @Transactional(readOnly=true)
+    public boolean isAdmin(String username) {
+        User user = getUserByUsername(username);
+        return user.isAdmin();
+    }
 
     /**
      * Metodo que devuelve una password ya cifrada 
@@ -110,6 +122,7 @@ public class UserServiceImpl implements UserService{
     public String encodePasswd(String str){
         return passwordEncoder.encode(str);
     }
+
 
     /**
      * Metodo que sirve para asignar los roles a un usuario en su creacion
@@ -130,7 +143,16 @@ public class UserServiceImpl implements UserService{
         return roles;
     }
 
+    private boolean validateAdminRoleUserDb(List<Role> roles){
+        boolean isAdmin = false;
+        for (Role role : roles){
+            if ("ROLE_ADMIN".equals(role.getName())){
+                isAdmin = true;
+                break;
+            }
+        }
 
-
+        return isAdmin;
+    }
 
 }

@@ -9,6 +9,8 @@ import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 public interface ProductService {
     
     List<Product> findAllProducts();
+
+    List<Product> findAllProductsWithoutInvisibles();
     
     Product getProductById(Long productId);
 
