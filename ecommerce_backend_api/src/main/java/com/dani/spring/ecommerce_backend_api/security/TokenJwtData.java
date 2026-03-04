@@ -20,6 +20,7 @@ public class TokenJwtData {
             "GET", List.of(
                     "/product",
                     "/product/*",
+                    "/review/*",
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
             ),
