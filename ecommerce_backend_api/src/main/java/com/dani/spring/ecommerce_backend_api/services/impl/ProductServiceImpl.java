@@ -14,6 +14,8 @@ import com.dani.spring.ecommerce_backend_api.entities.product.ProductDetail;
 import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ProductServiceImpl implements ProductService{
 
@@ -28,8 +30,13 @@ public class ProductServiceImpl implements ProductService{
     
     @Override
     @Transactional(readOnly=true)
-    public Optional<Product> getProductById(Long id) {
-        return repository.findById(id);
+    public Product getProductById(Long productId) {
+        Optional<Product>optProduct = repository.findById(productId);
+        if (!optProduct.isPresent()){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + productId);
+        }
+        
+        return optProduct.orElseThrow();
     }
 
     @Transactional
@@ -64,31 +71,30 @@ public class ProductServiceImpl implements ProductService{
 
     @Transactional
     @Override
-    public Optional<Product> modifyFullProduct(ProductUpdateDto productRequest, Long id) {
-        //Al hacer el map ya actualizamos el producto en db
-         return getProductById(id).map(product -> {
-            //Aqui validamos si hay datos de cada campo informados sino se dejaran los ya existentes
-            product.setName(productRequest.getName() != null ? productRequest.getName() : product.getName());
-            product.setDescription(productRequest.getDescription() != null ? productRequest.getDescription() : product.getDescription());
-            product.setPrice(productRequest.getPrice() != null ? productRequest.getPrice() : product.getPrice());
-            product.setStock(productRequest.getStock() != null ? productRequest.getStock() : product.getStock());
-            product.setImageUrl(productRequest.getImageUrl() != null ? productRequest.getImageUrl() : product.getImageUrl());
-            product.setVisible(productRequest.isVisible() != null ? productRequest.isVisible() : product.isVisible());
+    public Product modifyFullProduct(ProductUpdateDto productRequest, Long productId) {
+        //Obtenemos el product y si no existe devuelve un 404
+        Product product = getProductById(productId);
+        //Si no se introduce valor en algun campo dejamos el de db
+        product.setName(productRequest.getName() != null ? productRequest.getName() : product.getName());
+        product.setDescription(productRequest.getDescription() != null ? productRequest.getDescription() : product.getDescription());
+        product.setPrice(productRequest.getPrice() != null ? productRequest.getPrice() : product.getPrice());
+        product.setStock(productRequest.getStock() != null ? productRequest.getStock() : product.getStock());
+        product.setImageUrl(productRequest.getImageUrl() != null ? productRequest.getImageUrl() : product.getImageUrl());
+        product.setVisible(productRequest.isVisible() != null ? productRequest.isVisible() : product.isVisible());
 
-            ProductDetail detail = product.getDetail();
-            if (detail != null) {
-                detail.setBrand(productRequest.getBrand() != null ? productRequest.getBrand() : detail.getBrand());
-                detail.setLongDescription(productRequest.getLongDescription() != null ? productRequest.getLongDescription() : detail.getLongDescription());
-                detail.setCategories(productRequest.getCategories() != null ? productRequest.getCategories() : detail.getCategories());
-            }
+        ProductDetail detail = product.getDetail();
+        if (detail != null) {
+           detail.setBrand(productRequest.getBrand() != null ? productRequest.getBrand() : detail.getBrand());
+            detail.setLongDescription(productRequest.getLongDescription() != null ? productRequest.getLongDescription() : detail.getLongDescription());
+            detail.setCategories(productRequest.getCategories() != null ? productRequest.getCategories() : detail.getCategories());
+        }
 
-            return product;
-        });
+        return repository.save(product);
     }
 
     @Override
-    public Boolean existInDb(Long id) {
-        return repository.existsById(id);
+    public Boolean existInDb(Long productId) {
+        return repository.existsById(productId);
     }
 
 

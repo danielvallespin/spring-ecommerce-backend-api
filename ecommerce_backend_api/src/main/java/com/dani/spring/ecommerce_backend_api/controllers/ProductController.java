@@ -3,7 +3,6 @@ package com.dani.spring.ecommerce_backend_api.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,15 +64,15 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<FullProductResponseDto> getProductById(@PathVariable Long id) {
-        Optional<Product> optProduct = service.getProductById(id);
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+    @GetMapping("/{productId}")
+    public ResponseEntity<FullProductResponseDto> getProductById(@PathVariable Long productId) {
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = service.getProductById(productId);
 
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(product));
     }
 
-    //CREAR
+    //CREATE
     @Operation(summary = "Insertar un nuevo producto (solo para admins)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Producto creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullProductResponseDto.class))),
@@ -98,8 +97,7 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateDto productRequest, @PathVariable Long id) {
         validateProductExists(id);
-        Optional<Product> optProductMod = service.modifyFullProduct(productRequest, id);
-        Product productMod = ProductUtility.getProductFromOptionalOrThrow(optProductMod, id);
+        Product productMod = service.modifyFullProduct(productRequest, id);
         
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(productMod));
     }
@@ -111,12 +109,12 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/visible/{id}")
-    public ResponseEntity<Map<String, Object>> doVisible(@PathVariable Long id){
+    @PatchMapping("/visible/{productId}")
+    public ResponseEntity<Map<String, Object>> doVisible(@PathVariable Long productId){
         Map<String, Object> data = new HashMap<>();
 
-        Optional<Product> optProduct = service.getProductById(id);
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = service.getProductById(productId);
         product.setVisible(true);
         service.saveProduct(product);
         
@@ -133,12 +131,12 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/invisible/{id}")
-    public ResponseEntity<Map<String, Object>> doInvisible(@PathVariable Long id){
+    @PatchMapping("/invisible/{productId}")
+    public ResponseEntity<Map<String, Object>> doInvisible(@PathVariable Long productId){
         Map<String, Object> data = new HashMap<>();
 
-        Optional<Product> optProduct = service.getProductById(id);
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, id);
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = service.getProductById(productId);
         product.setVisible(false);
         service.saveProduct(product);
         

@@ -2,54 +2,16 @@ package com.dani.spring.ecommerce_backend_api.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.ProductCartOrWishResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.WishlistResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.Wishlist;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.WishlistItem;
 
-import jakarta.persistence.EntityNotFoundException;
-
 public class WishlistUtility {
 
-    /**
-     * Respuesta para cuando un producto o lista no ha sido encontrado
-     * @param message
-     * @return
-     */
-    public static ResponseEntity<Map<String, String>> getNotFoundMessgae(String message){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", message));
-    }
-
-    /**
-     * Metodo que devuelve un objeto Wishlist de un optional, sino lanza error
-     * 404 a traves de la clase GlobalExceptionHandler
-     *
-     * @param optWishlist
-     * @param message
-     * @return User
-     */
-    public static Wishlist getWishlistFromOptionalOrThrow(Optional<Wishlist> optWishlist, String message) {
-        return optWishlist.orElseThrow(() -> new EntityNotFoundException(message));
-    }
-
-    /**
-     * Metodo que devuelve un objeto Wishlist de un optional, sino lanza error
-     * 404 a traves de la clase GlobalExceptionHandler
-     *
-     * @param optWishlist
-     * @return User
-     */
-    public static Wishlist getWishlistFromOptionalOrThrow(Optional<Wishlist> optWishlist) {
-        return getWishlistFromOptionalOrThrow(optWishlist, "La lista indicada no existe");
-    }
-
-
+    
     /**
      * Metodo que devuelve una lista de objetos wishlist response dto
      *
@@ -58,9 +20,11 @@ public class WishlistUtility {
      */
     public static List<WishlistResponseDto> getListOfWishlistResponse(List<Optional<Wishlist>> optWishlists) {
         List<WishlistResponseDto> responseList = new ArrayList<>();
-        for (Optional<Wishlist> opt : optWishlists) {
-            Wishlist wishlist = getWishlistFromOptionalOrThrow(opt, "El usuario no tiene ninguna lista de deseados");
-            responseList.add(getWishlistResponse(wishlist));
+        if (optWishlists != null && !optWishlists.isEmpty()){
+            for (Optional<Wishlist> opt : optWishlists) {
+                Wishlist wishlist = opt.orElseThrow();
+                responseList.add(getWishlistResponse(wishlist));
+            }
         }
 
         return responseList;

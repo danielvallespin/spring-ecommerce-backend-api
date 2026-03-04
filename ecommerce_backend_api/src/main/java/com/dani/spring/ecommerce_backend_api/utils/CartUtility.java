@@ -2,11 +2,6 @@ package com.dani.spring.ecommerce_backend_api.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartItemResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
@@ -15,8 +10,6 @@ import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.exceptions.InsufficientStockException;
-
-import jakarta.persistence.EntityNotFoundException;
 
 public class CartUtility {
 
@@ -62,26 +55,6 @@ public class CartUtility {
                 product.getDetail().getBrand()
         );
     }
-
-    /**
-     * Metodo que devuelve un objeto Cart de un optional, sino lanza error 404 a traves de la clase GlobalExceptionHandler
-     * @param optCart
-     * @param id
-     * @return Cart
-     */
-    public static Cart getCartFromOptionalOrThrow(Optional<Cart> optCart){
-        return optCart.orElseThrow(() -> new EntityNotFoundException("El usuario no tiene asignado ningun carrito."));
-    }
-
-
-    /**
-     * Respuesta predefinida para cuando un producto no ha sido encontrado
-     * @return
-     */
-    public static ResponseEntity<Map<String, String>> getProductNotFoundMessage(){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no existe"));
-    }
-
 
     /**
      * Metodo de validacion para no superar el stock disponible (si no se supera devuelve un 409)

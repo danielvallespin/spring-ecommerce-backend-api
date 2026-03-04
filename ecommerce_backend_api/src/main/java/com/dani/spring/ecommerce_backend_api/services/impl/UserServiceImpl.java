@@ -19,11 +19,13 @@ import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -32,10 +34,10 @@ public class UserServiceImpl implements UserService{
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    CartServiceImpl cartService;
+    private CartServiceImpl cartService;
 
     @Autowired
-    WishlistService wishlistService;
+    private WishlistService wishlistService;
 
     @Override
     @Transactional(readOnly=true)
@@ -45,8 +47,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public Optional<User> getUserById(Long id){
-        return  repository.findById(id);
+    public User getUserById(Long userId){
+        Optional<User> optUser = repository.findById(userId);
+        if (!optUser.isPresent()){
+            throw new EntityNotFoundException("No se ha encontrado ningún usuario con id: " + userId);
+        }
+        
+        return optUser.orElseThrow();
     }
 
     @Transactional
@@ -83,14 +90,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public Optional<User> getUserByUsername(String username) {
-        return repository.getByUsername(username);
+    public User getUserByUsername(String username) {
+        return repository.getByUsername(username).orElseThrow();
     }
 
     @Override
     @Transactional
-    public void deleteUserById(Long id){
-        repository.deleteById(id);
+    public void deleteUserById(Long userId){
+        repository.deleteById(userId);
     }
 
 

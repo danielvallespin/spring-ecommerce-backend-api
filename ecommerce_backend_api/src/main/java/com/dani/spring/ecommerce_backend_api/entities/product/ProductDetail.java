@@ -16,7 +16,6 @@ import jakarta.persistence.Table;
 @Entity
 public class ProductDetail {
 
-    @Schema(description = "Id del producto", example = "1")
     @Id
     private Long productId;
 

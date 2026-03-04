@@ -1,13 +1,10 @@
 package com.dani.spring.ecommerce_backend_api.utils;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
-
-import jakarta.persistence.EntityNotFoundException;
 
 public class ProductUtility {
 
@@ -50,14 +47,5 @@ public class ProductUtility {
         );
     }
 
-    /**
-     * Metodo que devuelve un objeto Product de un optional, sino lanza error 404 a traves de la clase GlobalExceptionHandler
-     * @param optProduct
-     * @param id
-     * @return Product
-     */
-    public static Product getProductFromOptionalOrThrow(Optional<Product> optProduct, Long id){
-        return optProduct.orElseThrow(() -> new EntityNotFoundException("No se ha encontrado ningún producto con id: " + id));
-    }
 
 }

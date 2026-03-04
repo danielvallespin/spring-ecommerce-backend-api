@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,7 +69,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserAdminResponseDto> getUserById(@PathVariable Long id){
-        User user = UserUtility.getUserFromOptionalOrThrow(service.getUserById(id), id);
+        User user = service.getUserById(id);
         return ResponseEntity.ok(UserUtility.getUserAdminResponse(user));
     }
 
@@ -110,8 +109,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
-        Optional<User> optUser = service.getUserByUsername(principal.getName());
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser);
+        User user = service.getUserByUsername(principal.getName());
         return ResponseEntity.ok(UserUtility.getUserResponse(user));
     }
 
@@ -126,13 +124,14 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id){
         Map<String, Object> data = new HashMap<>();
 
-        Optional<User> optUser = service.getUserById(id);
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser, id);
+        //Obtenemos el user (sino existe devuelve 404)
+        User user = service.getUserById(id);
 
         service.deleteUserById(user.getId());
         data.put("message", "El usuario ha sido eliminado correctamente");
         data.put("userId", user.getId());
         data.put("username", user.getUsername());
+
         return ResponseEntity.ok(data);
     }
 
@@ -147,11 +146,11 @@ public class UserController {
     public ResponseEntity<Map<String, String>> changePassword(Principal principal, @RequestBody ChangePasswordRequestDto request){
         Map<String, String> data = new HashMap<>();
 
-        Optional<User> optUser = service.getUserByUsername(principal.getName());
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser);
+        User user = service.getUserByUsername(principal.getName());
         user.setPassword(service.encodePasswd(request.getPassword()));
         service.saveUser(user);
         data.put("message", "Contraseña modificada correctamente");
+
         return ResponseEntity.ok(data);
     }
 
@@ -166,11 +165,12 @@ public class UserController {
     public ResponseEntity<Map<String, String>> enableUserById(@PathVariable Long id){
         Map<String, String> data = new HashMap<>();
 
-        Optional<User> optUser = service.getUserById(id);
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser, id);
+        //Obtenemos el user (sino existe devuelve 404)
+        User user = service.getUserById(id);
         user.setEnabled(true);
         service.saveUser(user);
         data.put("message", String.format("El usuario %s ha sido habilitado", user.getUsername()));
+
         return ResponseEntity.ok(data);
     }
 
@@ -186,11 +186,12 @@ public class UserController {
     public ResponseEntity<Map<String, String>> disableUserById(@PathVariable Long id){
         Map<String, String> data = new HashMap<>();
 
-        Optional<User> optUser = service.getUserById(id);
-        User user = UserUtility.getUserFromOptionalOrThrow(optUser, id);
+        //Obtenemos el user (sino existe devuelve 404)
+        User user = service.getUserById(id);
         user.setEnabled(false);
         service.saveUser(user);
         data.put("message", String.format("El usuario %s ha sido deshabilitado", user.getUsername()));
+
         return ResponseEntity.ok(data);
     }
 

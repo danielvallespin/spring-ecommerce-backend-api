@@ -11,7 +11,7 @@ import com.dani.spring.ecommerce_backend_api.entities.user.User;
 
 public interface CartService {
 
-    Optional<Cart> getUserCart(String username);
+    Cart getUserCart(String username);
 
     Cart createCart(User user);
 

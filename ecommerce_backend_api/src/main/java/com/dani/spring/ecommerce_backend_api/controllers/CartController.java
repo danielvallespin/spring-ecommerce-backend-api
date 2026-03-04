@@ -24,7 +24,6 @@ import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.utils.CartUtility;
-import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,8 +53,7 @@ public class CartController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),})
     @GetMapping
     public ResponseEntity<CartResponseDto> getUserCart(Principal principal) {
-        Optional<Cart> optUserCart = service.getUserCart(principal.getName());
-        Cart userCart = CartUtility.getCartFromOptionalOrThrow(optUserCart);
+        Cart userCart = service.getUserCart(principal.getName());
         return ResponseEntity.ok(CartUtility.getCartResponse(userCart));
     }
 
@@ -64,15 +62,13 @@ public class CartController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto agregado al carrito correctamente", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
-        @ApiResponse(responseCode = "404", description = "El producto indicado no existe", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado ningún producto con id: id", content = @Content),
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PostMapping("/add-item")
     public ResponseEntity<Map<String, String>> addProductToCart(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
-        //Obtenemos el producto Optional
-        Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        //Transformamos a objeto Product (si no existe devuelve un 404)
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, request.getProductId());
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = productService.getProductById(request.getProductId());
 
         //Validacion para no superar el stock disponible
         Optional<CartItem> optCartItem = service.getCartItemById(product.getId(), principal.getName());
@@ -101,25 +97,22 @@ public class CartController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto eliminado del carrito correctamente", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
-        @ApiResponse(responseCode = "404", description = "El producto indicado no existe", content = @Content)
+        @ApiResponse(responseCode = "404", description = "El producto indicado no esta dentro del carrito", content = @Content)
     })
     @DeleteMapping("/delete-item")
     public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody DelProductFromCartRequestDto request, Principal principal) {
-        //Validacion de la existencia del producto
-        Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        if (optProduct.isPresent()) {
+        //Validacion de la existencia del producto (sino existe devuelve un 404)
+        productService.getProductById(request.getProductId());
 
-            //Validacion de si el producto no esta en carrito para no hacer nada
-            boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
-            if (!alreadyExists) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
-            }
-
-            //Eliminamos
-            service.removeProductFromCart(request.getProductId(), principal.getName());
-            return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
+        //Validacion de si el producto no esta en carrito para no hacer nada
+        boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
+        if (!alreadyExists) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
         }
-        return CartUtility.getProductNotFoundMessage();
+
+        //Eliminamos
+        service.removeProductFromCart(request.getProductId(), principal.getName());
+        return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
     }
 
     //CHANGE_QUANTITY
@@ -128,15 +121,13 @@ public class CartController {
         @ApiResponse(responseCode = "200", description = "Cantidad del producto modificada correctamente", content = @Content),
         @ApiResponse(responseCode = "200", description = "Producto eliminado del carrito correctamente", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
-        @ApiResponse(responseCode = "404", description = "El producto indicado no existe", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado ningún producto con id: id", content = @Content),
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PutMapping("/change-quantity")
     public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
-        //Obtenemos el producto Optional
-        Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        //Transformamos a objeto Product (si no existe devuelve un 404)
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, request.getProductId());
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = productService.getProductById(request.getProductId());
 
         //Validacion para comprobar que el producto este en el carrito
         boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());

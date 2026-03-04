@@ -20,7 +20,7 @@ public interface WishlistService {
 
     WishlistItem addItem(Wishlist wishlist, Product product);
 
-    Optional<Wishlist> getWishlistByUserAndId(String username, Long wishlistId);
+    Wishlist getWishlistByUserAndId(String username, Long wishlistId);
 
     boolean alreadyExistsListName(String username, String wishlistName);
 

@@ -23,7 +23,6 @@ import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.Wishlist;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.WishlistService;
-import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 import com.dani.spring.ecommerce_backend_api.utils.WishlistUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,10 +73,8 @@ public class WishlistController {
     })
     @GetMapping("{wishlistId}")
     public ResponseEntity<WishlistResponseDto> getWishList(@PathVariable Long wishlistId, Principal principal){
-        //Obtenemos la Wishlist Optional
-        Optional<Wishlist> optWishlist = service.getWishlistByUserAndId(principal.getName(), wishlistId);
-        //Transformamos a objeto wishlist (si no existe devuelve un 404)
-        Wishlist wishlist = WishlistUtility.getWishlistFromOptionalOrThrow(optWishlist);
+        //Obtenemos la Wishlist (sino existe devuelve un 404)
+        Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), wishlistId);
 
         //Devolvemos la lista
         return ResponseEntity.ok(WishlistUtility.getWishlistResponse(wishlist));
@@ -111,10 +108,8 @@ public class WishlistController {
     })
     @DeleteMapping("/delete/{wishlistId}")
     public ResponseEntity<Map<String, String>> deleteWishlist(@PathVariable Long wishlistId, Principal principal){
-        //Obtenemos la Wishlist Optional
-        Optional<Wishlist> optWishlist = service.getWishlistByUserAndId(principal.getName(), wishlistId);
-        //Transformamso a objeto wishlist (si no existe devuelve un 404)
-        Wishlist wishlist = WishlistUtility.getWishlistFromOptionalOrThrow(optWishlist);
+        //Obtenemos la Wishlist (sino existe devuelve un 404)
+        Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), wishlistId);
 
         //Eliminamos
         service.deleteWishlist(wishlist.getId());
@@ -132,21 +127,16 @@ public class WishlistController {
     })
     @PostMapping("/add-item")
     public ResponseEntity<Map<String, String>> addItemToWishlist(@Valid @RequestBody AddOrDelWishlistItemRequestDto request, Principal principal){
-        //Obtenemos la Wishlist Optional
-        Optional<Wishlist> optWishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
-        //Transformamos a objeto wishlist (si no existe devuelve un 404)
-        Wishlist wishlist = WishlistUtility.getWishlistFromOptionalOrThrow(optWishlist);
+        //Obtenemos la Wishlist (sino existe devuelve un 404)
+        Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
 
-        //Validamos la existencia del producto
-        Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        if (optProduct.isPresent()){
-            //Guardamos el producto en la lista
-            Product product = optProduct.orElseThrow();
-            service.addItem(wishlist, product);
-            return ResponseEntity.ok(Map.of("message", "Producto agregado correctamente en " + wishlist.getName()));
-        }
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = productService.getProductById(request.getProductId());
 
-        return WishlistUtility.getNotFoundMessgae("El producto indicado no existe");
+        //Agregamos el item a la lista
+        service.addItem(wishlist, product);
+            
+        return ResponseEntity.ok(Map.of("message", "Producto agregado correctamente en " + wishlist.getName()));
     }
 
 
@@ -159,20 +149,18 @@ public class WishlistController {
     })
     @DeleteMapping("/delete-item")
     public ResponseEntity<Map<String, String>> deleteItemFromWishlist(@Valid @RequestBody AddOrDelWishlistItemRequestDto request, Principal principal){
-        //Obtenemos la Wishlist Optional
-        Optional<Wishlist> optWishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
-        //Transformamso a objeto wishlist (si no existe devuelve un 404)
-        Wishlist wishlist = WishlistUtility.getWishlistFromOptionalOrThrow(optWishlist);
+        //Obtenemos la Wishlist (sino existe devuelve un 404)
+        Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
 
-        //Obtenemos el product Optional
-        Optional<Product> optProduct = productService.getProductById(request.getProductId());
-        //Transformamos a objeto Product (si no existe devuelve un 404)
-        Product product = ProductUtility.getProductFromOptionalOrThrow(optProduct, request.getProductId());
+        //Obtenemos el product (sino existe devuelve un 404)
+        Product product = productService.getProductById(request.getProductId());
 
         //Eliminamos
         service.deleteWishlistItem(wishlist.getId(), product.getId());
 
         return ResponseEntity.ok(Map.of("message", "Producto eliminado de la lista correctamente"));
     }
+
+
 
 }

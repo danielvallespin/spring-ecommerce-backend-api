@@ -16,6 +16,8 @@ import com.dani.spring.ecommerce_backend_api.repositories.WishlistItemRepository
 import com.dani.spring.ecommerce_backend_api.repositories.WishlistRepository;
 import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class WishlistServiceImpl implements WishlistService {
 
@@ -27,6 +29,17 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Transactional(readOnly=true)
+    @Override
+    public Wishlist getWishlistByUserAndId(String username, Long wishlistId) {
+        User user = userRepository.getByUsername(username).orElseThrow();
+        Optional<Wishlist> optWishlist = repository.findByUserIdAndId(user.getId(), wishlistId);
+        if (!optWishlist.isPresent()){
+            throw  new EntityNotFoundException("La lista indicada no existe");
+        }
+        return optWishlist.orElseThrow();
+    }
 
     @Transactional(readOnly=true)
     @Override
@@ -62,13 +75,6 @@ public class WishlistServiceImpl implements WishlistService {
     public WishlistItem addItem(Wishlist wishlist, Product product) {
         WishlistItem wishlistItem = new WishlistItem(wishlist, product);
         return wishlistItemRepository.save(wishlistItem);
-    }
-
-    @Transactional(readOnly=true)
-    @Override
-    public Optional<Wishlist> getWishlistByUserAndId(String username, Long wishlistId) {
-        User user = userRepository.getByUsername(username).orElseThrow();
-        return repository.findByUserIdAndId(user.getId(), wishlistId);
     }
 
     @Transactional(readOnly=true)
