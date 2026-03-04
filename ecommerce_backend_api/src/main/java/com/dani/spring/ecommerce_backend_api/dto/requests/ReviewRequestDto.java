@@ -7,7 +7,7 @@ import com.dani.spring.ecommerce_backend_api.validations.StringSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public class AddReviewRequestDto {
+public class ReviewRequestDto {
 
     @Schema(description = "Puntuacion de la review", example = "4")
     @NotNull
@@ -24,10 +24,10 @@ public class AddReviewRequestDto {
     @StringSize(min=10, max=250)
     private String comment;
 
-    public AddReviewRequestDto(){
+    public ReviewRequestDto(){
     }
 
-    public AddReviewRequestDto(Integer rating, String title, String comment) {
+    public ReviewRequestDto(Integer rating, String title, String comment) {
         this.rating = rating;
         this.title = title;
         this.comment = comment;
@@ -56,7 +56,6 @@ public class AddReviewRequestDto {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
     
 
 }
