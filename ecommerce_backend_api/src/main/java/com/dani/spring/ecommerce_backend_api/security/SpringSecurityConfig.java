@@ -57,8 +57,8 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Rutas públicas
                 .requestMatchers(HttpMethod.POST, "/login", "/user/singup").permitAll()
-                .requestMatchers(HttpMethod.GET, "/product", "/product/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/review", "/review/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/product", "/product/{productId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/review/{productId}").permitAll()
                 // Swagger y OpenAPI
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // Cualquier otra ruta requiere autenticación

@@ -19,8 +19,8 @@ public class TokenJwtData {
     public static final Map<String, List<String>> PUBLIC_ROUTES = Map.of(
             "GET", List.of(
                     "/product",
-                    "/product/*",
-                    "/review/*",
+                    "/product/{productId}",
+                    "/review/{productId}*",
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
             ),
