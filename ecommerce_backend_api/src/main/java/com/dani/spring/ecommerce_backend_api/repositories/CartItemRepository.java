@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItemId;
+import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+
 
 
 public interface CartItemRepository extends JpaRepository<CartItem, CartItemId>{
 
     List<CartItem> findByCart(Cart cart);
+
+    List<CartItem> findByProduct(Product product);
 
 }

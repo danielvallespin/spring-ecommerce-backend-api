@@ -107,7 +107,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "Usuario obtenido correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
     })
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/me")
+    @GetMapping("/my")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
         User user = service.getUserByUsername(principal.getName());
         return ResponseEntity.ok(UserUtility.getUserResponse(user));

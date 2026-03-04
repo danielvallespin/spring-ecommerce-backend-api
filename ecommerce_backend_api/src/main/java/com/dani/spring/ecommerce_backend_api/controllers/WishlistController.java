@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.requests.AddOrDelWishlistItemRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.CreateNewWishlistRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.WishlistItemRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.WishlistResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.Wishlist;
@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @Tag(name = "5. Wishlist", description = "API para la gestion de la lista de deseos")
@@ -126,12 +127,15 @@ public class WishlistController {
         @ApiResponse(responseCode = "404", description = "La lista o producto indicado no existe", content = @Content)
     })
     @PostMapping("/add-item")
-    public ResponseEntity<Map<String, String>> addItemToWishlist(@Valid @RequestBody AddOrDelWishlistItemRequestDto request, Principal principal){
+    public ResponseEntity<Map<String, String>> addItemToWishlist(@Valid @RequestBody WishlistItemRequestDto request, Principal principal){
         //Obtenemos la Wishlist (sino existe devuelve un 404)
         Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
 
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = productService.getProductById(request.getProductId());
+        if (!product.isVisible()){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + request.getProductId());
+        }
 
         //Agregamos el item a la lista
         service.addItem(wishlist, product);
@@ -148,7 +152,7 @@ public class WishlistController {
         @ApiResponse(responseCode = "404", description = "La lista o producto indicado no existe", content = @Content)
     })
     @DeleteMapping("/delete-item")
-    public ResponseEntity<Map<String, String>> deleteItemFromWishlist(@Valid @RequestBody AddOrDelWishlistItemRequestDto request, Principal principal){
+    public ResponseEntity<Map<String, String>> deleteItemFromWishlist(@Valid @RequestBody WishlistItemRequestDto request, Principal principal){
         //Obtenemos la Wishlist (sino existe devuelve un 404)
         Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), request.getWishlistId());
 

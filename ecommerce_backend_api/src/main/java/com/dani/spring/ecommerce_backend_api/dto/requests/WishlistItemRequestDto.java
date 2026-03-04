@@ -5,7 +5,7 @@ import com.dani.spring.ecommerce_backend_api.validations.NumberRange;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public class AddOrDelWishlistItemRequestDto {
+public class WishlistItemRequestDto {
 
     @Schema(description = "Id dela lista", example = "5")
     @NotNull
@@ -17,7 +17,12 @@ public class AddOrDelWishlistItemRequestDto {
     @NumberRange(min=0)
     private long productId;
 
-    public AddOrDelWishlistItemRequestDto(){
+    public WishlistItemRequestDto(){
+    }
+
+    public WishlistItemRequestDto(@NotNull long wishlistId, @NotNull long productId) {
+        this.wishlistId = wishlistId;
+        this.productId = productId;
     }
 
     public long getWishlistId() {
@@ -36,6 +41,5 @@ public class AddOrDelWishlistItemRequestDto {
         this.productId = productId;
     }
 
-    
 
 }

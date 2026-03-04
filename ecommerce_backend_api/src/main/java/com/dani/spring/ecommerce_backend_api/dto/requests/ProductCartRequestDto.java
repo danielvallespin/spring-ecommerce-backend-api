@@ -5,7 +5,7 @@ import com.dani.spring.ecommerce_backend_api.validations.NumberRange;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public class AddOrModProductCartRequestDto {
+public class ProductCartRequestDto {
 
     @Schema(description = "Id del producto", example = "4")
     @NotNull
@@ -17,7 +17,12 @@ public class AddOrModProductCartRequestDto {
     @NumberRange(min=0)
     private Integer quantity;
 
-    public AddOrModProductCartRequestDto() {
+    public ProductCartRequestDto() {
+    }
+
+    public ProductCartRequestDto(@NotNull Long productId, @NotNull Integer quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
     }
 
     public Long getProductId() {

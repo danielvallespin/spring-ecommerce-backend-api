@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
+import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +50,12 @@ public class ProductController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    CartService cartService;
+
+    @Autowired
+    WishlistService wishlistService;
+
     //GET_ALL
     @Operation(summary = "Obtener todos los productos (SIN JWT)")
     @ApiResponses(value = {
@@ -61,10 +69,7 @@ public class ProductController {
         List<Product> products = new ArrayList<>();
 
         //Comprobamos si el usuario es admin
-        boolean isAdmin = false;
-        if (principal != null){
-            isAdmin = userService.isAdmin(principal.getName());
-        }
+        boolean isAdmin = getIsAdmin(principal);
 
         //Si es admin podra ver los productos no visibles
         if (isAdmin){
@@ -89,13 +94,8 @@ public class ProductController {
 
         //En caso de ser un producto no visible tenemos que verificar que el usuario sea admin
         if (!product.isVisible()){
-            boolean isAdmin = false;
-            if (principal != null){
-                isAdmin = userService.isAdmin(principal.getName());
-            }
-            if(!isAdmin){
-                throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + productId);
-            }
+            //Si no es visible y no es admin devolevmos un 404
+            ProductUtility.visibilityValidation(getIsAdmin(principal), productId);
         }
 
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(product));
@@ -124,12 +124,13 @@ public class ProductController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateDto productRequest, @PathVariable Long id) {
+    public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateRequestDto productRequest, @PathVariable Long id) {
         validateProductExists(id);
-        Product productMod = service.modifyFullProduct(productRequest, id);
+        Product productMod = service.updateFullProduct(productRequest, id);
         
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(productMod));
     }
+
 
     //HABILITAR_VISIBILIDAD
     @Operation(summary = "Habilitar la visibilidad de un producto por id (solo para admins)")
@@ -154,7 +155,7 @@ public class ProductController {
     }
 
     //DESHABILITAR_VISIBILIDAD
-    @Operation(summary = "Deshabilitar la visibilidad de un producto por id (solo para admins)")
+    @Operation(summary = "Deshabilitar la visibilidad de un producto por id (solo para admins) IMPORTANTE esta accion borrara los productos del los carritos y listas de deseados")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto deshabilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
@@ -167,7 +168,8 @@ public class ProductController {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = service.getProductById(productId);
         product.setVisible(false);
-        service.saveProduct(product);
+        //Guardamos el producto y lo eliminamos de carritos y wishlist que lo contengan
+        service.disableProduct(product);
         
         data.put("message", "El producto ha sido deshabilitado correctamente");
         data.put("productId", product.getId());
@@ -185,6 +187,15 @@ public class ProductController {
         if (!exists){
             throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + id);
         }
+    }
+
+    private boolean getIsAdmin(Principal principal){
+        boolean isAdmin = false;
+        if (principal != null){
+            isAdmin = userService.isAdmin(principal.getName());
+        }
+
+        return isAdmin;
     }
 
 }

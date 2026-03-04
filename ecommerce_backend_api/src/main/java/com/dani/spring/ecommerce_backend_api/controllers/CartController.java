@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dani.spring.ecommerce_backend_api.dto.requests.AddOrModProductCartRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.requests.DelProductFromCartRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductCartRequestDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductFromCartRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @Tag(name = "4. Carrito de compra", description = "API para la gestión del carrito")
@@ -66,9 +67,12 @@ public class CartController {
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PostMapping("/add-item")
-    public ResponseEntity<Map<String, String>> addProductToCart(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
+    public ResponseEntity<Map<String, String>> addProductToCart(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = productService.getProductById(request.getProductId());
+        if (!product.isVisible()){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + request.getProductId());
+        }
 
         //Validacion para no superar el stock disponible
         Optional<CartItem> optCartItem = service.getCartItemById(product.getId(), principal.getName());
@@ -100,7 +104,7 @@ public class CartController {
         @ApiResponse(responseCode = "404", description = "El producto indicado no esta dentro del carrito", content = @Content)
     })
     @DeleteMapping("/delete-item")
-    public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody DelProductFromCartRequestDto request, Principal principal) {
+    public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody ProductFromCartRequestDto request, Principal principal) {
         //Validacion de la existencia del producto (sino existe devuelve un 404)
         productService.getProductById(request.getProductId());
 
@@ -125,7 +129,7 @@ public class CartController {
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PutMapping("/change-quantity")
-    public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody AddOrModProductCartRequestDto request, Principal principal) {
+    public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = productService.getProductById(request.getProductId());
 

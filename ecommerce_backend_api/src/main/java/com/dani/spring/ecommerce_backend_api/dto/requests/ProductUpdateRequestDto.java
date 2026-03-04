@@ -7,7 +7,7 @@ import com.dani.spring.ecommerce_backend_api.validations.StringSize;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class ProductUpdateDto {
+public class ProductUpdateRequestDto {
 
     // Datos del producto
     @Schema(description = "Nombre del producto", example = "PS5")
@@ -43,9 +43,24 @@ public class ProductUpdateDto {
     @Schema(description = "Categorias a las que pertenece el produto", example = "electronica,gaming")
     private String categories;
 
-    public ProductUpdateDto(){
+    public ProductUpdateRequestDto(){
     }
-    
+
+
+    public ProductUpdateRequestDto(String name, String description, BigDecimal price, Integer stock, String imageUrl,
+            Boolean visible, String longDescription, String brand, String categories) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+        this.visible = visible;
+        this.longDescription = longDescription;
+        this.brand = brand;
+        this.categories = categories;
+    }
+
+
     public String getName() {
         return name;
     }

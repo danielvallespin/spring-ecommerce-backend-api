@@ -6,6 +6,8 @@ import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDt
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 
+import jakarta.persistence.EntityNotFoundException;
+
 public class ProductUtility {
 
     /**
@@ -47,5 +49,15 @@ public class ProductUtility {
         );
     }
 
+    /**
+     * Metodo que devuelve 404 si el usuario no es admin
+     * @param isAdmin
+     * @param productId
+     */
+    public static void visibilityValidation(boolean isAdmin, Long productId) {
+        if (!isAdmin){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + productId);
+        }
+    }
 
 }

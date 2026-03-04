@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateDto;
+import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateRequestDto;
+import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.product.ProductDetail;
+import com.dani.spring.ecommerce_backend_api.entities.wishlist.WishlistItem;
+import com.dani.spring.ecommerce_backend_api.repositories.CartItemRepository;
 import com.dani.spring.ecommerce_backend_api.repositories.ProductRepository;
+import com.dani.spring.ecommerce_backend_api.repositories.WishlistItemRepository;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +26,13 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     ProductRepository repository;
+
+    @Autowired
+    CartItemRepository cartItemRepository;
+
+    @Autowired
+    WishlistItemRepository wishlistItemRepository;
+
 
     @Override
     @Transactional(readOnly=true)
@@ -81,7 +92,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Transactional
     @Override
-    public Product modifyFullProduct(ProductUpdateDto productRequest, Long productId) {
+    public Product updateFullProduct(ProductUpdateRequestDto productRequest, Long productId) {
         //Obtenemos el product y si no existe devuelve un 404
         Product product = getProductById(productId);
         //Si no se introduce valor en algun campo dejamos el de db
@@ -102,9 +113,27 @@ public class ProductServiceImpl implements ProductService{
         return repository.save(product);
     }
 
+    @Transactional(readOnly=true)
     @Override
     public Boolean existInDb(Long productId) {
         return repository.existsById(productId);
+    }
+
+    @Transactional
+    @Override
+    public void disableProduct(Product product) {
+        //Guardamos la modificacion
+        saveProduct(product);
+        //Eliminamos el producto de los carritos
+        List<CartItem> cartItems = cartItemRepository.findByProduct(product);
+        if (cartItems != null && !cartItems.isEmpty()){
+            cartItemRepository.deleteAll(cartItems);
+        }
+        //Eliminamos el producto de las listas de deseados
+        List<WishlistItem> wishlistItems = wishlistItemRepository.findByProduct(product);
+        if (wishlistItems != null && !wishlistItems.isEmpty()){
+            wishlistItemRepository.deleteAll(wishlistItems);
+        }
     }
 
 
