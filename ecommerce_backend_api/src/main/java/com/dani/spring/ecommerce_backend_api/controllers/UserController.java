@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,9 +66,9 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserAdminResponseDto> getUserById(@PathVariable Long id){
-        User user = service.getUserById(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserAdminResponseDto> getUserById(@PathVariable Long userId){
+        User user = service.getUserById(userId);
         return ResponseEntity.ok(UserUtility.getUserAdminResponse(user));
     }
 
@@ -113,28 +112,6 @@ public class UserController {
         return ResponseEntity.ok(UserUtility.getUserResponse(user));
     }
 
-    //DELTE_BY_ID
-    @Operation(summary = "Eliminar usuario por id (solo para admins)")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente", content = @Content),
-        @ApiResponse(responseCode = "404", description = "No se ha encontrado al usuario indicado", content = @Content)
-    })
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable Long id){
-        Map<String, Object> data = new HashMap<>();
-
-        //Obtenemos el user (sino existe devuelve 404)
-        User user = service.getUserById(id);
-
-        service.deleteUserById(user.getId());
-        data.put("message", "El usuario ha sido eliminado correctamente");
-        data.put("userId", user.getId());
-        data.put("username", user.getUsername());
-
-        return ResponseEntity.ok(data);
-    }
-
     //CHANGE_PASSWORD
     @Operation(summary = "Cambiar la contraseña de tu usario")
     @ApiResponses(value = {
@@ -161,12 +138,12 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "No se ha enocntrado al usuario indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/enable/{id}")
-    public ResponseEntity<Map<String, String>> enableUserById(@PathVariable Long id){
+    @PatchMapping("/enable/{userId}")
+    public ResponseEntity<Map<String, String>> enableUserById(@PathVariable Long userId){
         Map<String, String> data = new HashMap<>();
 
         //Obtenemos el user (sino existe devuelve 404)
-        User user = service.getUserById(id);
+        User user = service.getUserById(userId);
         user.setEnabled(true);
         service.saveUser(user);
         data.put("message", String.format("El usuario %s ha sido habilitado", user.getUsername()));
@@ -175,22 +152,20 @@ public class UserController {
     }
 
 
-    //ENABLE_BY_ID
-    @Operation(summary = "Deshabilitar usuario por id (solo para admins)")
+    //DISABLE_BY_ID
+    @Operation(summary = "Deshabilitar usuario por id (solo para admins)  IMPORTANTE dar de baja un usuario vacia su carrito")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario deshabilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado al usuario indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/disable/{id}")
-    public ResponseEntity<Map<String, String>> disableUserById(@PathVariable Long id){
+    @PatchMapping("/disable/{userId}")
+    public ResponseEntity<Map<String, String>> disableUserById(@PathVariable Long userId){
         Map<String, String> data = new HashMap<>();
 
         //Obtenemos el user (sino existe devuelve 404)
-        User user = service.getUserById(id);
-        user.setEnabled(false);
-        service.saveUser(user);
-        data.put("message", String.format("El usuario %s ha sido deshabilitado", user.getUsername()));
+        String usename = service.disableUser(userId);
+        data.put("message", String.format("El usuario %s ha sido deshabilitado", usename));
 
         return ResponseEntity.ok(data);
     }

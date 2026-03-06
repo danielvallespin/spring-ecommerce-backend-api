@@ -28,4 +28,6 @@ public interface WishlistService {
 
     void deleteWishlistItem(Long wishlistId, Long productId);
 
+    boolean existsByWishlistAndProduct(Wishlist wishlist, Product product);
+
 }

@@ -102,7 +102,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, String> body = new HashMap<>();
         //Capturamos y mapeamos el error
         body.put("message", "Error en la autenticacion");
-        body.put("error", failed.getMessage());
+        body.put("error", "Las credenciales no son correctas");
         //Agregar el mapa al response
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         //Tipo de respuesta y estado a devolver

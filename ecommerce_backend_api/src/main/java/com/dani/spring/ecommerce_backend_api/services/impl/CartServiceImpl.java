@@ -34,7 +34,7 @@ public class CartServiceImpl implements CartService {
     @Transactional(readOnly=true)
     @Override
     public Cart getUserCart(String username){
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         Optional<Cart> optCart = repository.findByUserId(user.getId());
         if (!optCart.isPresent()){
             throw new EntityNotFoundException("El usuario no tiene asignado ningun carrito.");

@@ -21,6 +21,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.WishlistItemRequestDto
 import com.dani.spring.ecommerce_backend_api.dto.responses.WishlistResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.Wishlist;
+import com.dani.spring.ecommerce_backend_api.exceptions.DataAlreadyExistsException;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 import com.dani.spring.ecommerce_backend_api.utils.WishlistUtility;
@@ -69,7 +70,7 @@ public class WishlistController {
     @Operation(summary = "Obtener lista especifica por id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = WishlistResponseDto.class))),
-        @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content),
         @ApiResponse(responseCode = "404", description = "La lista indicada no existe", content = @Content)
     })
     @GetMapping("{wishlistId}")
@@ -85,7 +86,7 @@ public class WishlistController {
     @Operation(summary = "Crear nueva lista")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista creada correctamente", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content),
         @ApiResponse(responseCode = "409", description = "Actualmente ya tienes una lista con el nombre 'nombre'", content = @Content)
     })
     @PostMapping
@@ -123,7 +124,7 @@ public class WishlistController {
     @Operation(summary = "Agregar un producto a la lista")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto agregado a la lista correctamente", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content),
         @ApiResponse(responseCode = "404", description = "La lista o producto indicado no existe", content = @Content)
     })
     @PostMapping("/add-item")
@@ -137,6 +138,11 @@ public class WishlistController {
             throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + request.getProductId());
         }
 
+        //Validamos que el producto no se encuentre ya en la wishlist
+        if (service.existsByWishlistAndProduct(wishlist, product)){
+            throw new DataAlreadyExistsException(String.format("El producto %s ya se encuentra en tu lista", product.getName()));
+        }
+
         //Agregamos el item a la lista
         service.addItem(wishlist, product);
             
@@ -148,7 +154,7 @@ public class WishlistController {
     @Operation(summary = "Eliminar un producto de la lista")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto eliminado de la lista correctamente", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content),
         @ApiResponse(responseCode = "404", description = "La lista o producto indicado no existe", content = @Content)
     })
     @DeleteMapping("/delete-item")

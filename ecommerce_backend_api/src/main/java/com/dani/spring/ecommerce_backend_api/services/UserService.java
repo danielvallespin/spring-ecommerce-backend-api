@@ -15,12 +15,12 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    void deleteUserById(Long userId);
-
     User saveUser(User user);
 
     String encodePasswd(String str);
 
     boolean isAdmin(String username);
+
+    String disableUser(Long userId);
 
 }

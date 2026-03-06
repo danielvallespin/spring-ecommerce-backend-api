@@ -33,7 +33,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional(readOnly=true)
     @Override
     public Wishlist getWishlistByUserAndId(String username, Long wishlistId) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         Optional<Wishlist> optWishlist = repository.findByUserIdAndId(user.getId(), wishlistId);
         if (!optWishlist.isPresent()){
             throw  new EntityNotFoundException("La lista indicada no existe");
@@ -50,7 +50,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional(readOnly=true)
     @Override
     public List<Optional<Wishlist>> getUserWishlists(String username) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         return repository.findByUserId(user.getId());
     }
 
@@ -66,7 +66,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional
     @Override
     public Wishlist createWishlist(String username, String name) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         return createWishlist(user, name);
     }
 
@@ -80,7 +80,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional(readOnly=true)
     @Override
     public boolean alreadyExistsListName(String username, String wishlistName) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         return repository.existsByUserIdAndName(user.getId(), wishlistName);
     }
 
@@ -96,7 +96,11 @@ public class WishlistServiceImpl implements WishlistService {
         wishlistItemRepository.deleteByIdWishlistIdAndIdProductId(wishlistId, productId);
     }
 
-
+    @Transactional(readOnly=true)
+    @Override
+    public boolean existsByWishlistAndProduct(Wishlist wishlist, Product product) {
+        return wishlistItemRepository.existsByWishlistAndProduct(wishlist, product);
+    }
 
 
 }

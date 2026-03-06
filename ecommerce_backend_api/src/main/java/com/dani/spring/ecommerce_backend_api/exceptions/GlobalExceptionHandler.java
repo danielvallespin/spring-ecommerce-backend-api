@@ -49,10 +49,10 @@ public class GlobalExceptionHandler {
     }
 
     //Excepcion para cuando el usermane introducido ya existe
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<?> handleUsernameExists(UsernameAlreadyExistsException ex) {
+    @ExceptionHandler(DataAlreadyExistsException.class)
+    public ResponseEntity<?> handleUsernameExists(DataAlreadyExistsException ex) {
         Map<String, Object> body = new HashMap<>();
-        body.put("error", "USERNAME_ALREADY_EXISTS");
+        body.put("error", "DATA_ALREADY_EXISTS");
         body.put("message", ex.getMessage());
         body.put("status", 400);
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+import com.dani.spring.ecommerce_backend_api.entities.wishlist.Wishlist;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.WishlistItem;
 import com.dani.spring.ecommerce_backend_api.entities.wishlist.WishlistItemId;
 
@@ -14,5 +15,7 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItem, Wish
     void deleteByIdWishlistIdAndIdProductId(Long wishlistId, Long productId);
 
     List<WishlistItem> findByProduct(Product product);
+
+    boolean existsByWishlistAndProduct(Wishlist wishlist, Product product);
 
 }

@@ -13,7 +13,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.UserAdminRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.UserRequestDto;
 import com.dani.spring.ecommerce_backend_api.entities.role.Role;
 import com.dani.spring.ecommerce_backend_api.entities.user.User;
-import com.dani.spring.ecommerce_backend_api.exceptions.UsernameAlreadyExistsException;
+import com.dani.spring.ecommerce_backend_api.exceptions.DataAlreadyExistsException;
 import com.dani.spring.ecommerce_backend_api.repositories.RoleRepository;
 import com.dani.spring.ecommerce_backend_api.repositories.UserRepository;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly=true)
     public User getUserByUsername(String username) {
-        User user = repository.getByUsername(username).orElseThrow();
+        User user = repository.findByUsername(username).orElseThrow();
         user.setAdmin(validateAdminRoleUserDb(user.getRoles()));
         
         return user;
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService{
     public User createUser(UserRequestDto user) {
         //Validamos que no exista el username y si existe lanzamos excepcion controlada
         if (repository.existsByUsername(user.getUsername())){
-            throw new UsernameAlreadyExistsException(String.format("El username %s ya existe, debe utilizar otro.", user.getUsername()));
+            throw new DataAlreadyExistsException(String.format("El username %s ya existe, debe utilizar otro.", user.getUsername()));
         }
         //Creamos el nuevo usuario y lo guardamos
         User newUser = new User(user.getEmail(), user.getUsername(), encodePasswd(user.getPassword()));
@@ -98,12 +98,6 @@ public class UserServiceImpl implements UserService{
         wishlistService.createWishlist(newUser, "Lista de deseados");
 
         return newUser;
-    }
-
-    @Override
-    @Transactional
-    public void deleteUserById(Long userId){
-        repository.deleteById(userId);
     }
 
     @Override
@@ -153,6 +147,18 @@ public class UserServiceImpl implements UserService{
         }
 
         return isAdmin;
+    }
+
+    @Transactional
+    @Override
+    public String disableUser(Long userId) {
+        User user = getUserById(userId);
+        user.setEnabled(false);
+
+        String username = user.getUsername();
+        cartService.emptyCart(username);
+
+        return username;
     }
 
 }

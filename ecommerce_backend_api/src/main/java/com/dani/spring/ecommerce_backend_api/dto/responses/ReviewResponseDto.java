@@ -15,9 +15,6 @@ public class ReviewResponseDto {
     String comment;
 
     boolean purchased;
-
-    public ReviewResponseDto(){
-    }
     
     public ReviewResponseDto(Long productId, Long userId, String reviewerUsername, Integer rating, String title, String comment, boolean purchased) {
         this.productId = productId;

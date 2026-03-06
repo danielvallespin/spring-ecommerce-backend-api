@@ -115,11 +115,13 @@ CREATE TABLE orders_items (
 CREATE TABLE card_payment_methods (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
-    type VARCHAR(20) NOT NULL,  -- (visa, mastercard, ...)
+    type VARCHAR(10) NOT NULL CHECK (type IN ('visa', 'mastercard')),
     last_4 CHAR(4) NOT NULL,
     expiry_month INT NOT NULL CHECK (expiry_month BETWEEN 1 AND 12),
-    expiry_year INT NOT NULL, -- EL year se controla por codigo
+    expiry_year INT NOT NULL CHECK (expiry_year BETWEEN 2020 AND 2999),
     is_default TINYINT NOT NULL DEFAULT 0,
+    enabled TINYINT NOT NULL DEFAULT 1,
+    UNIQUE (user_id, last_4),
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
 );

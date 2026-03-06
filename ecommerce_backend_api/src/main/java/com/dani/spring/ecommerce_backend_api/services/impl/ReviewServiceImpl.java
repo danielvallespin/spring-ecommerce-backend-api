@@ -36,14 +36,14 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly=true)
     @Override
     public List<Review> getAllMyReviews(String username) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         return repository.findByUser(user);
     }
 
     @Transactional(readOnly=true)
     @Override
     public Review getReview(Product product,String username) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         Optional<Review> optReview = repository.findByProductAndUser(product, user);
         if (!optReview.isPresent()){
             throw new EntityNotFoundException("No se ha encontrado ningúna review para el producto con id: " + product.getId());
@@ -55,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     @Override
     public Review createReview(Product product, String username, ReviewRequestDto request) {
-        User user = userRepository.getByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
         Review review = new Review(
             user,
             product,

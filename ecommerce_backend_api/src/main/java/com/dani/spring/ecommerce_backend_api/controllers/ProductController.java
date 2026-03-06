@@ -23,10 +23,8 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateRequestDt
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
-import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
-import com.dani.spring.ecommerce_backend_api.services.WishlistService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,12 +47,6 @@ public class ProductController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    CartService cartService;
-
-    @Autowired
-    WishlistService wishlistService;
 
     //GET_ALL
     @Operation(summary = "Obtener todos los productos (SIN JWT)")
