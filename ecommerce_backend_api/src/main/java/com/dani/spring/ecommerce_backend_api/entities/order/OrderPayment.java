@@ -3,6 +3,7 @@ package com.dani.spring.ecommerce_backend_api.entities.order;
 import java.math.BigDecimal;
 
 import com.dani.spring.ecommerce_backend_api.entities.payment_method.PaymentMethod;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ public class OrderPayment {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    //Fk hacia Order
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="order_id", nullable = false)
     private Order order;

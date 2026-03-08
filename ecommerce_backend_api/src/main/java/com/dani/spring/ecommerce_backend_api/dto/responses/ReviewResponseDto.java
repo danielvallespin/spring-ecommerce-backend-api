@@ -1,20 +1,29 @@
 package com.dani.spring.ecommerce_backend_api.dto.responses;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ReviewResponseDto {
 
-    Long productId;
+    @Schema(description = "Id del producto", example = "5")
+    private final Long productId;
 
-    Long userId;
+    @Schema(description = "Id del usuario", example = "3")
+    private final Long userId;
 
-    String reviewerUsername;
+    @Schema(description = "Username del usuario", example = "dani")
+    private final String reviewerUsername;
 
-    Integer rating;
+    @Schema(description = "Puntuacion de la reseña", example = "4")
+    private final Integer rating;
 
-    String title;
+    @Schema(description = "Titulo de la reseña", example = "Buen producto")
+    private final String title;
 
-    String comment;
+    @Schema(description = "Comentario de la reseña", example = "Relacion calidad precio correcta")
+    private final String comment;
 
-    boolean purchased;
+    @Schema(description = "Indicado de si el producto ha sido comprado", example = "true")
+    private final boolean purchased;
     
     public ReviewResponseDto(Long productId, Long userId, String reviewerUsername, Integer rating, String title, String comment, boolean purchased) {
         this.productId = productId;

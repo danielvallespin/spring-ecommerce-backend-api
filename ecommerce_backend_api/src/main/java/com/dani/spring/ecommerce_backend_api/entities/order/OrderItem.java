@@ -3,6 +3,7 @@ package com.dani.spring.ecommerce_backend_api.entities.order;
 import java.math.BigDecimal;
 
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -18,11 +19,14 @@ public class OrderItem {
     @EmbeddedId
     private OrderItemId id;
 
+    //Fk hacia Order
+    @JsonIgnore
     @ManyToOne
     @MapsId("orderId")
     @JoinColumn(name="order_id", nullable = false)
     private Order order;
 
+    //Fk hacia Product
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name="product_id", nullable = false)

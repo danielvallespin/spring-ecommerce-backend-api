@@ -1,22 +1,32 @@
 package com.dani.spring.ecommerce_backend_api.dto.responses;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class PaymentMethodResponseDto {
 
-    private Long paymentId;
+    @Schema(description = "Id del metodo de pago", example = "4")
+    private final Long paymentId;
 
-    private Long userId;
+    @Schema(description = "Id del usuario", example = "3")
+    private final Long userId;
 
-    private String type;
+    @Schema(description = "Tipo de tarjeta", example = "visa")
+    private final String type;
 
-    private String last4;
+    @Schema(description = "Ultimos 4 digitos", example = "1234")
+    private final String last4;
 
-    private Integer expiryMonth;
+    @Schema(description = "Mes de expiracion", example = "10")
+    private final Integer expiryMonth;
 
-    private Integer expiryYear;
+    @Schema(description = "Año de expiracion", example = "2028")
+    private final Integer expiryYear;
 
-    private boolean isDefault;
+    @Schema(description = "Indicado de tarjeta principal", example = "true")
+    private final boolean isDefault;
 
-    private boolean enabled;
+    @Schema(description = "Indicador de tarjeta habilitada", example = "true")
+    private final boolean enabled;
 
     public PaymentMethodResponseDto(Long paymentId, Long userId, String type, String last4, Integer expiryMonth, Integer expiryYear, boolean isDefault, boolean enabled) {
         this.paymentId = paymentId;
@@ -33,64 +43,32 @@ public class PaymentMethodResponseDto {
         return paymentId;
     }
 
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
-
     public Long getUserId() {
         return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getLast4() {
         return last4;
-    }
-
-    public void setLast4(String last4) {
-        this.last4 = last4;
     }
 
     public Integer getExpiryMonth() {
         return expiryMonth;
     }
 
-    public void setExpiryMonth(Integer expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
-
     public Integer getExpiryYear() {
         return expiryYear;
-    }
-
-    public void setExpiryYear(Integer expiryYear) {
-        this.expiryYear = expiryYear;
     }
 
     public boolean isDefault() {
         return isDefault;
     }
 
-    public void setDefault(boolean isDefault) {
-        this.isDefault = isDefault;
-    }
-
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
 

@@ -1,5 +1,6 @@
 package com.dani.spring.ecommerce_backend_api.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
@@ -11,13 +12,12 @@ import jakarta.persistence.EntityNotFoundException;
 public class ProductUtility {
 
     /**
-     * Metodo que devuelve una lista de SimpleProductDto a partir de otra de Product
-     * @param products
-     * @return List<SimpleProductDto>
+     * Metodo de convierte un Product en SimpleProductDto
+     * @param product
+     * @return
      */
-    public static List<SimpleProductDto> getSimpleProductsList(List<Product> products){
-        return products.stream()
-            .map(product -> new SimpleProductDto(
+    public static SimpleProductDto getSimpleProduct(Product product){
+        return new SimpleProductDto(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
@@ -25,24 +25,31 @@ public class ProductUtility {
                 product.getStock(),
                 product.getImageUrl(),
                 product.isVisible()
-            ))
-            .toList();
+            );
     }
 
     /**
-     * Metodo que devuelve objeto dto FullProduct a partir de un Product
+     * Metodo que convierte una lista de Product en una lista de SimpleProductDto
+     * @param products
+     * @return List<SimpleProductDto>
+     */
+    public static List<SimpleProductDto> getSimpleProductList(List<Product> products){
+        List<SimpleProductDto> response = new ArrayList<>();
+        for (Product product : products){
+            response.add(getSimpleProduct(product));
+        }
+
+        return response;
+    }
+
+    /**
+     * Metodo convierte un Product en un FullProductResponseDto
      * @param product
      * @return FullProductResponseDto
      */
     public static FullProductResponseDto getFullProductResponseDto(Product product){
         return new FullProductResponseDto(
-            product.getId(), 
-            product.getName(), 
-            product.getDescription(), 
-            product.getPrice(),
-            product.getStock(),
-            product.getImageUrl(),
-            product.isVisible(),
+            getSimpleProduct(product),
             product.getDetail().getLongDescription(),
             product.getDetail().getBrand(),
             product.getDetail().getCategories()

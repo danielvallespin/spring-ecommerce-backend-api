@@ -1,10 +1,14 @@
 package com.dani.spring.ecommerce_backend_api.dto.responses;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class CartItemResponseDto {
 
-    private ProductCartOrWishResponseDto product;
+    
+    private final ProductCartOrWishResponseDto product;
 
-    private Integer quantity;
+    @Schema(description = "Canmtidad", example = "3")
+    private final Integer quantity;
 
     public CartItemResponseDto(ProductCartOrWishResponseDto product, Integer quantity) {
         this.product = product;
@@ -15,16 +19,8 @@ public class CartItemResponseDto {
         return product;
     }
 
-    public void setProduct(ProductCartOrWishResponseDto product) {
-        this.product = product;
-    }
-
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
     }
 
     

@@ -70,7 +70,7 @@ public class ProductController {
             products = service.findAllProductsWithoutInvisibles();
         }
     
-        return ResponseEntity.ok(ProductUtility.getSimpleProductsList(products));
+        return ResponseEntity.ok(ProductUtility.getSimpleProductList(products));
     }
 
     //GET_BY_ID

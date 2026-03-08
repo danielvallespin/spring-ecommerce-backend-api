@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Respuesta de login exitoso")
 public class LoginResponseDto {
 
-    @Schema(description = "Token JWT", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+    @Schema(description = "Token JWT", example = "eyJhbGciOiJIUzI1Ni9...")
     private final String token;
 
     @Schema(description = "Nombre de usuario autenticado", example = "admin")
