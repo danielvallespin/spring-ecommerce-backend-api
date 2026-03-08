@@ -101,7 +101,7 @@ INSERT INTO wishlist_items (wishlist_id, product_id) VALUES
 -- ======================================
 INSERT INTO orders (user_id, amount, status) VALUES
 (1, 151.98, 'paid'),
-(2, 79.50, 'pending'),
+(2, 79.50, 'delivered'),
 (3, 289.99, 'shipped');
 
 -- ======================================

@@ -94,7 +94,7 @@ CREATE TABLE orders (
     user_id BIGINT NOT NULL,
     amount DECIMAL(10,2) NOT NULL CHECK (amount >= 0),
     status VARCHAR(20) NOT NULL DEFAULT 'pending'
-        CHECK (status IN ('pending','paid','shipped','delivered','cancelled')),
+        CHECK (status IN ('paid','shipped','delivered','cancelled')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id)
