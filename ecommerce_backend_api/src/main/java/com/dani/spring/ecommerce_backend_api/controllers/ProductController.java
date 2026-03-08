@@ -56,7 +56,7 @@ public class ProductController {
             description = "Lista obtenida correctamente",
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleProductDto.class))))
     })
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<SimpleProductDto>> getAll(Principal principal) {
         List<Product> products = new ArrayList<>();
 
@@ -100,7 +100,7 @@ public class ProductController {
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<FullProductResponseDto> create(@Valid @RequestBody FullProductRequestDto productRequest) {
         Product newProduct = service.createFullProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(

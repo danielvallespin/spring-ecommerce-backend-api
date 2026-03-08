@@ -69,7 +69,7 @@ public class OrderController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDetailRespondeDto.class))),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el pedido indicado", content = @Content)
     })
-    @GetMapping("/{orderId}")
+    @GetMapping("/my/{orderId}")
     public ResponseEntity<OrderDetailRespondeDto> getOrderDetail(@PathVariable Long orderId, Principal principal){
         //Obtenemos el pedido (si no exite devuelve un 404)
         Order order = service.getOrderById(orderId, principal.getName());

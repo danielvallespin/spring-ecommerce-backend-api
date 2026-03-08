@@ -46,7 +46,7 @@ public class PaymentMethodController {
             description = "Metodos de pago obtenidos correctamente",
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PaymentMethodResponseDto.class))))
     })
-    @GetMapping
+    @GetMapping("/my/all")
     public ResponseEntity<List<PaymentMethodResponseDto>> getAllMyPaymentsMethod(Principal principal){
         //En caso de no tener ningun metodo de pago devolvera un 404
         List<PaymentMethod> payments = service.getAllUserPaymentMethods(principal.getName());
@@ -63,7 +63,7 @@ public class PaymentMethodController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentMethodResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el metodo de pago indicado", content = @Content)
     })
-    @GetMapping("/{paymentId}")
+    @GetMapping("/my/{paymentId}")
     public ResponseEntity<PaymentMethodResponseDto> getPaymentMethod(@PathVariable Long paymentId, Principal principal){
         //En caso de no tener ningun metodo de pago devolvera un 404
         PaymentMethod payment = service.getPaymentMethodById(paymentId, principal.getName());
@@ -81,7 +81,7 @@ public class PaymentMethodController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentMethodResponseDto.class))),
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<PaymentMethodResponseDto> createPaymentMethod(@Valid @RequestBody PaymentMethodRequestDto request, Principal principal){
         PaymentMethod response = null;
         //Buscamos si el metodo ya existe y lo tiene deshabilitado

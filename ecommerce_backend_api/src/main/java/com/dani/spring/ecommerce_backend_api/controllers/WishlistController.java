@@ -56,7 +56,7 @@ public class WishlistController {
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WishlistResponseDto.class)))),
         @ApiResponse(responseCode = "404", description = "Lista no encontrada", content = @Content)
     })
-    @GetMapping("/all")
+    @GetMapping("/my/all")
     public ResponseEntity<List<WishlistResponseDto>> getMyWishlists(Principal principal){
         //Obtener listas y items
         List<Optional<Wishlist>> optWishlists = service.getUserWishlists(principal.getName());
@@ -73,7 +73,7 @@ public class WishlistController {
         @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content),
         @ApiResponse(responseCode = "404", description = "La lista indicada no existe", content = @Content)
     })
-    @GetMapping("{wishlistId}")
+    @GetMapping("/my/{wishlistId}")
     public ResponseEntity<WishlistResponseDto> getWishList(@PathVariable Long wishlistId, Principal principal){
         //Obtenemos la Wishlist (sino existe devuelve un 404)
         Wishlist wishlist = service.getWishlistByUserAndId(principal.getName(), wishlistId);

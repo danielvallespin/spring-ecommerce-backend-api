@@ -52,7 +52,7 @@ public class CartController {
                 responseCode = "200",
                 description = "Carrito obtenido correctamente",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),})
-    @GetMapping
+    @GetMapping("/my")
     public ResponseEntity<CartResponseDto> getUserCart(Principal principal) {
         Cart userCart = service.getUserCart(principal.getName());
         return ResponseEntity.ok(CartUtility.getCartResponse(userCart));
