@@ -1,6 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     @Transactional(readOnly=true)
     @Override
     public List<PaymentMethod> getAllUserPaymentMethods(User user) {
-        return repository.findByUser(user);
+        return repository.findByUser(user).stream()
+                .filter((payment) -> payment.isEnabled())
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly=true)
@@ -44,7 +47,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     public PaymentMethod getPaymentMethodById(Long paymentId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow();
         PaymentMethod payment = repository.findByUserAndId(user, paymentId);
-        if (payment == null){
+        if (payment == null || !payment.isEnabled()){
             throw new EntityNotFoundException("No se ha encontrado el metodo de pago indicado");
         }
 
