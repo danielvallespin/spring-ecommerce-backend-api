@@ -36,8 +36,8 @@ public class User {
     @ManyToMany
     @JoinTable(
         name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"),
+        joinColumns = @JoinColumn(name = "user_id", nullable = false),
+        inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false),
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}
     )
     private List<Role> roles;

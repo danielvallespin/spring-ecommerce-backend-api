@@ -21,13 +21,13 @@ public class WishlistItem {
     @JsonIgnore
     @ManyToOne
     @MapsId("wishlistId")
-    @JoinColumn(name = "wishlist_id")
+    @JoinColumn(name = "wishlist_id", nullable = false)
     private Wishlist wishlist;
 
     //FK product id
     @ManyToOne
     @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     public WishlistItem(){}
