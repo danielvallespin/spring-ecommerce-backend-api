@@ -21,7 +21,7 @@ public class CartUtility {
      */
     public static CartResponseDto getCartResponse(Cart cart) {
         List<CartItemResponseDto> items = getCartItemsListResponse(cart.getItems());
-        return new CartResponseDto(cart.getId(), cart.getUser().getId(), items);
+        return new CartResponseDto(cart.getId(), cart.getUser().getId(), items, cart.getAmount());
     }
 
     /**

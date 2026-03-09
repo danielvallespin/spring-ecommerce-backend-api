@@ -1,6 +1,5 @@
 package com.dani.spring.ecommerce_backend_api.services.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +34,20 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart getUserCart(String username){
         User user = userRepository.findByUsername(username).orElseThrow();
+        return getUserCart(user);
+    }
+    
+    @Transactional(readOnly=true)
+    @Override
+    public Cart getUserCart(User user){
         Optional<Cart> optCart = repository.findByUserId(user.getId());
         if (!optCart.isPresent()){
             throw new EntityNotFoundException("El usuario no tiene asignado ningun carrito.");
         }
-        return optCart.orElseThrow();
+        Cart cart = optCart.orElseThrow();
+        cart.calculateAmount();
+
+        return cart;
     }
 
     @Transactional
@@ -62,8 +70,14 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeProductFromCart(Long productId, String username) {
         Cart cart = getUserCart(username);
+
         CartItemId cartItemId = new CartItemId(cart.getId(), productId);
-        cartItemRepository.deleteById(cartItemId);
+        Optional<CartItem> optCartItem = getCartItemById(cartItemId);
+        if (optCartItem.isPresent()){
+            CartItem cartItem = optCartItem.orElseThrow();
+            //Al eliminarlo de el objeto padre orphanRemoval lo elimina
+            cart.getItems().remove(cartItem);
+        }
     }
 
     @Transactional(readOnly=true)
@@ -99,24 +113,14 @@ public class CartServiceImpl implements CartService {
         Cart cart = getUserCart(username);
         return getCartItemById(new CartItemId(cart.getId(), productId));
     }
-
-    @Transactional(readOnly=true)
-    @Override
-    public List<CartItem> getAllItemsFromCart(String username) {
-        Cart cart = getUserCart(username);
-        return cartItemRepository.findByCart(cart);
-    }
     
     @Transactional
     @Override
     public void emptyCart(String username) {
-        List<CartItem> items = getAllItemsFromCart(username);
-        if (!items.isEmpty()){
-            cartItemRepository.deleteAll(items);
-        }
+        Cart cart = getUserCart(username);
+        //Clear vacia el arraylist del padre y orphanRemoval lo elimina
+        cart.getItems().clear();
     }
-
-
 
 
 }

@@ -9,7 +9,7 @@ public class ProductFromCartRequestDto {
 
     @Schema(description = "Id del producto", example = "4")
     @NotNull
-    @NumberRange(min=0)
+    @NumberRange(min=1)
     private Long productId;
 
     public ProductFromCartRequestDto() {

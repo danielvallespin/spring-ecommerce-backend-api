@@ -31,6 +31,8 @@ public class OrderPayment {
     @JoinColumn(name="card_id", nullable = false)
     private PaymentMethod paymentMethod;
 
+    private BigDecimal amount;
+
     public OrderPayment(){
     }
 
@@ -39,8 +41,6 @@ public class OrderPayment {
         this.paymentMethod = paymentMethod;
         this.amount = amount;
     }
-
-    private BigDecimal amount;
 
     public Long getId() {
         return id;

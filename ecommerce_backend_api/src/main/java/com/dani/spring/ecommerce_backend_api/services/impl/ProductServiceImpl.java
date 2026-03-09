@@ -136,6 +136,15 @@ public class ProductServiceImpl implements ProductService{
         }
     }
 
+    @Transactional
+    @Override
+    public void discountStock(Long productId, Integer discount) {
+        Product product = getProductById(productId);
+        Integer newStock = product.getStock() - discount;
+        product.setStock(newStock);
+        saveProduct(product);
+    }
+
 
 
 }

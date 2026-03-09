@@ -43,7 +43,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleBadJson(HttpMessageNotReadableException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
+        error.put("error", "JSON_PARSE_BAD");
+        error.put("message", ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -70,7 +71,7 @@ public class GlobalExceptionHandler {
     
     //Excepcion para cuando se intenta agregar o adquirir mas stock del disponible
     @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<?> handleInsuffcientStock(InsufficientStockException ex) {
+    public ResponseEntity<Map<String, Object>> handleInsuffcientStock(InsufficientStockException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "INSUFFICIENT_STOCK");
         body.put("message", ex.getMessage());
@@ -79,5 +80,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
     
+    //Excepcion para cuando validamos existencia de datos dependientes y no hay resultados
+    @ExceptionHandler(BadRequestException.class)
+     public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "BAD_REQUEST");
+        body.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
 
 }

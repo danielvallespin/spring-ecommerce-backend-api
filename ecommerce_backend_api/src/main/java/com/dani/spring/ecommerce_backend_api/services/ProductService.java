@@ -24,4 +24,6 @@ public interface ProductService {
 
     Boolean existInDb(Long productId);
 
+    void discountStock(Long productId, Integer discount);
+
 }

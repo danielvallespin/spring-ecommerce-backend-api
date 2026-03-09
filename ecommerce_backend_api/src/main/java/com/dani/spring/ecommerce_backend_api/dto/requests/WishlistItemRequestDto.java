@@ -9,12 +9,12 @@ public class WishlistItemRequestDto {
 
     @Schema(description = "Id dela lista", example = "5")
     @NotNull
-    @NumberRange(min=0)
+    @NumberRange(min=1)
     private long wishlistId;
 
     @Schema(description = "Id del producto", example = "1")
     @NotNull
-    @NumberRange(min=0)
+    @NumberRange(min=1)
     private long productId;
 
     public WishlistItemRequestDto(){

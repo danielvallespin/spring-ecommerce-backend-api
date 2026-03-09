@@ -18,11 +18,11 @@ public class CartResponseDto {
 
     private final List<CartItemResponseDto> items;
 
-    public CartResponseDto(Long cartId, Long userId, List<CartItemResponseDto> items) {
+    public CartResponseDto(Long cartId, Long userId, List<CartItemResponseDto> items, BigDecimal amount) {
         this.cartId = cartId;
         this.userId = userId;
         this.items = items;
-        this.amount = calculateAmount();
+        this.amount = amount;
     }
 
     public Long getCartId() {
@@ -39,23 +39,6 @@ public class CartResponseDto {
 
     public List<CartItemResponseDto> getItems() {
         return items;
-    }
-
-    /**
-     * Metodo que calcula el importe total del carrito
-     * @return
-     */
-    private BigDecimal calculateAmount(){
-        BigDecimal result = BigDecimal.ZERO;
-        if (this.items != null && !items.isEmpty()){
-            for(CartItemResponseDto itemResponse : items){
-                BigDecimal price = itemResponse.getProduct().getPrice();
-                Integer quantity = itemResponse.getQuantity();
-                result = result.add(price.multiply(BigDecimal.valueOf(quantity)));
-            }
-        }
-
-        return result;
     }
 
 

@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Table(name="cart_items")
@@ -21,7 +20,7 @@ public class CartItem {
 
     //FK cart id
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @MapsId("cartId")
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
@@ -38,10 +37,10 @@ public class CartItem {
     public CartItem(){}
 
     public CartItem(Cart cart, Product product, int quantity) {
+        this.id = new CartItemId(cart.getId(), product.getId());
         this.cart = cart;
         this.product = product;
         this.quantity = quantity;
-        this.id = new CartItemId(cart.getId(), product.getId());
     }
 
 

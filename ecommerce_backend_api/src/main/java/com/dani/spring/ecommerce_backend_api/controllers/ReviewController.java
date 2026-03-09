@@ -3,6 +3,7 @@ package com.dani.spring.ecommerce_backend_api.controllers;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.ReviewUpdateRequestDto
 import com.dani.spring.ecommerce_backend_api.dto.responses.ReviewResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.reviews.Review;
+import com.dani.spring.ecommerce_backend_api.exceptions.DataAlreadyExistsException;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.ReviewService;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
@@ -126,6 +128,12 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDto> createReview(@Valid @RequestBody ReviewRequestDto request, @PathVariable Long productId, Principal principal){
         //Obtenemos el product (sino existe o no tienes acceso a el devuelve un 404)
         Product product = getProductWithVisibilityValidation(productId, principal);
+
+        //Validamos si ya habia una review
+        Optional<Review> optReview = service.getOptionalReview(product, principal.getName());
+        if (optReview.isPresent()){
+            throw new DataAlreadyExistsException(String.format("Ya has publicado una reseña para %s", product.getName()));
+        }
 
         //Creamos la review
         Review newReview = service.createReview(product, principal.getName(), request);

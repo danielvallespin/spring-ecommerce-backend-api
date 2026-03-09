@@ -1,5 +1,6 @@
 package com.dani.spring.ecommerce_backend_api.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,14 +39,27 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     @Transactional(readOnly=true)
     @Override
     public List<PaymentMethod> getAllUserPaymentMethods(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUserByUsername(username);
         return getAllUserPaymentMethods(user);
+    }
+
+    @Override
+    public List<PaymentMethod> getUserPaymentMethodsByIds(User user, List<Long> ids) {
+        List<PaymentMethod> payments = new ArrayList<>();
+        for (Long id : ids){
+            PaymentMethod payment = repository.findByUserAndId(user, id);
+            if (payment != null){
+                payments.add(payment);
+            }
+        }
+
+        return payments;
     }
 
     @Transactional(readOnly=true)
     @Override
     public PaymentMethod getPaymentMethodById(Long paymentId, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUserByUsername(username);
         PaymentMethod payment = repository.findByUserAndId(user, paymentId);
         if (payment == null || !payment.isEnabled()){
             throw new EntityNotFoundException("No se ha encontrado el metodo de pago indicado");
@@ -57,7 +71,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     @Transactional(readOnly=true)
     @Override
     public PaymentMethod getByUserAndLast4(String last4, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUserByUsername(username);
         return repository.findByUserAndLast4(user, last4);
     }
 
@@ -70,7 +84,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     @Transactional
     @Override
     public PaymentMethod createPaymentMethod(PaymentMethodRequestDto request, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUserByUsername(username);
         //Convertimos el request y user en un objeto PaymentMethod
         PaymentMethod payment = PaymentMethodUtility.getPaymentMethod(request, user);
         payment.setEnabled(true);
@@ -100,7 +114,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     @Transactional
     @Override
     public void disbaleDefaultFromOtherPayments(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUserByUsername(username);
         disbaleDefaultFromOtherPayments(user);
     }
 
@@ -130,6 +144,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService{
     }
 
 
+    @Transactional(readOnly=true)
+    private User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow();
+    }
 
 
 }

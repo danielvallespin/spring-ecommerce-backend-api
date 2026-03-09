@@ -12,6 +12,8 @@ public interface PaymentMethodService {
     
     List<PaymentMethod> getAllUserPaymentMethods(User user);
 
+    List<PaymentMethod> getUserPaymentMethodsByIds(User user, List<Long> ids);
+
     PaymentMethod getPaymentMethodById(Long paymentId, String username);
 
     PaymentMethod getByUserAndLast4(String last4, String username);
