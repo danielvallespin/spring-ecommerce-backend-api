@@ -19,6 +19,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.OrderPaymentRequestDto
 import com.dani.spring.ecommerce_backend_api.dto.requests.OrderRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.OrderDetailRespondeDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.OrderResponseDto;
+import com.dani.spring.ecommerce_backend_api.entities.addresses.Address;
 import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
 import com.dani.spring.ecommerce_backend_api.entities.order.Order;
@@ -26,6 +27,7 @@ import com.dani.spring.ecommerce_backend_api.entities.payment_method.PaymentMeth
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 import com.dani.spring.ecommerce_backend_api.entities.user.User;
 import com.dani.spring.ecommerce_backend_api.exceptions.BadRequestException;
+import com.dani.spring.ecommerce_backend_api.services.AddressService;
 import com.dani.spring.ecommerce_backend_api.services.CartService;
 import com.dani.spring.ecommerce_backend_api.services.OrderService;
 import com.dani.spring.ecommerce_backend_api.services.PaymentMethodService;
@@ -42,7 +44,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "8. Pedidos", description = "API para gestión de pedidos")
+@Tag(name = "9. Pedidos", description = "API para gestión de pedidos")
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -61,6 +63,9 @@ public class OrderController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    AddressService addressService;
 
     //GET_ALL
     @Operation(summary = "Obtener todos los pedidos (solo para admins)")
@@ -84,7 +89,7 @@ public class OrderController {
             description = "Pedidos obtenidos correctamente",
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrderResponseDto.class))))
     })
-    @GetMapping("/my")
+    @GetMapping("/my/all")
     public ResponseEntity<List<OrderResponseDto>> getAllMyOrders(Principal principal){
         return ResponseEntity.ok(OrderUtility.getOrderResponseList(service.getAllMyOrders(principal.getName())));
     }
@@ -126,6 +131,9 @@ public class OrderController {
             throw new BadRequestException("El carrito esta vacio");
         }
 
+        //Obtenemos la direccion de envio indicada (si no existe devuelve un 404)
+        Address address = addressService.getUserAddressById(request.getAddressId(), user);
+
         //Validamos que no se supere el stock de ningun producto
         Product productOutOfStock = validateProductsStock(cart.getItems());
         if (productOutOfStock != null){
@@ -149,7 +157,7 @@ public class OrderController {
         }
 
         //--CREACION--
-        Order newOrder = service.createOrder(user, cart, paymentMethods, request);
+        Order newOrder = service.createOrder(user, cart, address, paymentMethods, request);
 
         return ResponseEntity.ok(OrderUtility.getOrderDetailResponse(newOrder));
     }

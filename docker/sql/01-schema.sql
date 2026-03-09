@@ -6,7 +6,7 @@ CREATE TABLE products (
     price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     stock INT NOT NULL CHECK (stock >= 0),
     image_url VARCHAR(500) NOT NULL,
-    visible TINYINT NOT NULL DEFAULT 1,
+    visible TINYINT NOT NULL DEFAULT 1 CHECK (visible BETWEEN 0 AND 1),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
@@ -28,7 +28,7 @@ CREATE TABLE users (
     username VARCHAR(25) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    enabled TINYINT NOT NULL DEFAULT 1,
+    enabled TINYINT NOT NULL DEFAULT 1 CHECK (enabled BETWEEN 0 AND 1),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     UNIQUE (username)
@@ -95,8 +95,17 @@ CREATE TABLE orders (
     amount DECIMAL(10,2) NOT NULL CHECK (amount >= 0),
     status VARCHAR(20) NOT NULL DEFAULT 'pending'
         CHECK (status IN ('paid','shipped','delivered','cancelled')),
+    
+    -- Shipping data
+    full_shipping_address VARCHAR(150) NOT NULL,
+    shipping_country VARCHAR(60) NOT NULL,
+    shipping_city VARCHAR(60) NOT NULL,
+    shipping_postal_code VARCHAR(20) NOT NULL,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     PRIMARY KEY (id),
+    INDEX (user_id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -119,8 +128,8 @@ CREATE TABLE card_payment_methods (
     last_4 CHAR(4) NOT NULL,
     expiry_month INT NOT NULL CHECK (expiry_month BETWEEN 1 AND 12),
     expiry_year INT NOT NULL CHECK (expiry_year BETWEEN 2020 AND 2999),
-    is_default TINYINT NOT NULL DEFAULT 0,
-    enabled TINYINT NOT NULL DEFAULT 1,
+    is_default TINYINT NOT NULL DEFAULT 0 CHECK (is_default BETWEEN 0 AND 1),
+    enabled TINYINT NOT NULL DEFAULT 1 CHECK (enabled BETWEEN 0 AND 1),
     UNIQUE (user_id, last_4),
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
@@ -146,11 +155,30 @@ CREATE TABLE reviews (
     rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     title VARCHAR(100) NOT NULL,
     comment TEXT NOT NULL,
-    purchased TINYINT NOT NULL,
+    purchased TINYINT NOT NULL CHECK (purchased BETWEEN 0 AND 1),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     PRIMARY KEY (id),
     UNIQUE (user_id, product_id),
+    INDEX (product_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Tabla que almacena las direcciones de envio de los usuarios (en el futuro se podria mejorar con otra tabla de paises y sus diferentes ciudades)
+CREATE TABLE addresses(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    street VARCHAR(120) NOT NULL,
+    number VARCHAR(10) NOT NULL,
+    floor VARCHAR(10) NOT NULL,
+    door VARCHAR(10) NOT NULL,
+    country VARCHAR(60) NOT NULL,
+    city VARCHAR(60) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    is_default TINYINT DEFAULT 0 CHECK (is_default BETWEEN 0 AND 1),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX (user_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -95,6 +95,10 @@ public class OrderUtility {
     public static OrderDetailRespondeDto getOrderDetailResponse(Order order){
         return new OrderDetailRespondeDto(
             getOrderResponse(order),
+            order.getFullShippingAddress(),
+            order.getShippingCountry(),
+            order.getShippingCity(),
+            order.getShippingPostalCode(),
             getOrderItemResponse(order.getItems()),
             getOrderPaymentResponse(order.getPayments())
         );

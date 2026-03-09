@@ -99,10 +99,10 @@ INSERT INTO wishlist_items (wishlist_id, product_id) VALUES
 -- ======================================
 -- Orders
 -- ======================================
-INSERT INTO orders (user_id, amount, status) VALUES
-(1, 151.98, 'paid'),
-(2, 79.50, 'delivered'),
-(3, 289.99, 'shipped');
+INSERT INTO orders (user_id, amount, status, full_shipping_address, shipping_country, shipping_city, shipping_postal_code) VALUES
+(1, 151.98, 'paid', 'Calle Mayor, 15, 3 - 3', 'Spain', 'Barcelona', '28013'),
+(2, 79.50, 'delivered', 'Carrer de Balmes, 120, 2 - 1', 'Spain', 'Barcelona', '08008'),
+(3, 289.99, 'shipped', 'Calle Gran Vía, 48, 4 - C', 'Spain', 'Madrid', '28004');
 
 -- ======================================
 -- Orders Items
@@ -143,3 +143,14 @@ INSERT INTO reviews (user_id, product_id, rating, title, comment, purchased) VAL
 (3, 3, 4, 'Monitor que cumple', 'Buena prestaciones y calidad, pero algo caro.', 1),
 (2, 5, 1, 'Tuve este mouse y no me gustó', 'Mala calidad y rendimiento.', 0),
 (3, 4, 3, 'Teclado normal', 'Esta bien, sin mas.', 0);
+
+
+-- ======================================
+-- Addresses
+-- ======================================
+INSERT INTO addresses (user_id, name, street, number, floor, door, country, city, postal_code, is_default) VALUES
+(1, 'Casa', 'Calle Mayor', '15', '3', '3', 'Spain', 'Barcelona', '28013', 1),
+(1, 'Trabajo', 'Avenida de América', '24', '5', 'A', 'Spain', 'Madrid', '28002', 0),
+(2, 'Casa', 'Carrer de Balmes', '120', '2', '1', 'Spain', 'Barcelona', '08008', 1),
+(3, 'Casa', 'Calle Gran Vía', '48', '4', 'C', 'Spain', 'Madrid', '28004', 1),
+(4, 'Casa', 'Carrer de la Marina', '210', '1', '2', 'Spain', 'Barcelona', '08013', 1);

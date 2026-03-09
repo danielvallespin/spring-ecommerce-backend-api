@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.OrderPaymentRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.OrderRequestDto;
+import com.dani.spring.ecommerce_backend_api.entities.addresses.Address;
 import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
 import com.dani.spring.ecommerce_backend_api.entities.order.Order;
@@ -83,9 +84,11 @@ public class OrderServiceImpl implements OrderService{
 
     @Transactional
     @Override
-    public Order createOrder(User user, Cart cart, List<PaymentMethod> paymentMethods, OrderRequestDto request) {
+    public Order createOrder(User user, Cart cart, Address address, List<PaymentMethod> paymentMethods, OrderRequestDto request) {
+        //Montamos la direccion de envio
+        String fullShippingAddress = getFullShippingAddress(address);
         //Creamos el pedido
-        Order newOrder = new Order(user, cart.getAmount(), INITIAL_ORDER_STATUS, null, null);
+        Order newOrder = new Order(user, cart.getAmount(), INITIAL_ORDER_STATUS, fullShippingAddress, address.getCountry(), address.getCity(), address.getPostalCode(), null, null);
         Order order = repository.save(newOrder);
         //Guardamos los productos comprados
         List<OrderItem> orderItems= orderItemRepository.saveAll(getOrderItems(order, cart.getItems()));
@@ -174,6 +177,24 @@ public class OrderServiceImpl implements OrderService{
         for (OrderItem orderItem : orderItems){
             productService.discountStock(orderItem.getProduct().getId(), orderItem.getQuantity());
         }
+    }
+
+    /**
+     * Devuelve la direccion de envio concatenada
+     * @param address
+     * @return
+     */
+    private String getFullShippingAddress(Address address){
+        StringBuilder fullShippingAddress = new StringBuilder();
+        fullShippingAddress.append(address.getStreet());
+        fullShippingAddress.append(", ");
+        fullShippingAddress.append(address.getNumber());
+        fullShippingAddress.append(", ");
+        fullShippingAddress.append(address.getFloor());
+        fullShippingAddress.append(" - ");
+        fullShippingAddress.append(address.getDoor());
+
+        return fullShippingAddress.toString();
     }
 
 }
