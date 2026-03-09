@@ -34,7 +34,7 @@ public class Order {
     private String status;
 
     @Column(name="full_shipping_address")
-    private String fullShippingAddress;
+    private String fullShippingAddress; 
 
     @Column(name="shipping_country")
     private String shippingCountry;

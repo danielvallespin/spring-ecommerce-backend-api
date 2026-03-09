@@ -2,9 +2,10 @@ package com.dani.spring.ecommerce_backend_api.services.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +37,14 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     @Transactional(readOnly=true)
-    public List<Product> findAllProducts() {
-        return repository.findAll();
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return repository.findAll(pageable);
     }
     
     @Override
     @Transactional(readOnly=true)
-    public List<Product> findAllProductsWithoutInvisibles() {
-        List<Product> products = repository.findAll();
-        return products.stream()
-                        .filter(product -> product.isVisible() == true)
-                        .collect(Collectors.toList());
+    public Page<Product> findAllProductsWithoutInvisibles(Pageable pageable) {
+        return repository.findByVisibleTrue(pageable);
     }
     
     @Override

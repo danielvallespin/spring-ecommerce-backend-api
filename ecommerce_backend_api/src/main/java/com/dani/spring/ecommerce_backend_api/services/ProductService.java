@@ -1,6 +1,7 @@
 package com.dani.spring.ecommerce_backend_api.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateRequestDto;
@@ -8,9 +9,9 @@ import com.dani.spring.ecommerce_backend_api.entities.product.Product;
 
 public interface ProductService {
     
-    List<Product> findAllProducts();
+    Page<Product> findAllProducts(Pageable pageable);
 
-    List<Product> findAllProductsWithoutInvisibles();
+    Page<Product> findAllProductsWithoutInvisibles(Pageable pageable);
     
     Product getProductById(Long productId);
 

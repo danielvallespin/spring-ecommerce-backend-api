@@ -1,12 +1,15 @@
 package com.dani.spring.ecommerce_backend_api.controllers;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.FullProductRequestDto;
@@ -28,6 +32,7 @@ import com.dani.spring.ecommerce_backend_api.services.UserService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,20 +62,27 @@ public class ProductController {
             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleProductDto.class))))
     })
     @GetMapping("/all")
-    public ResponseEntity<List<SimpleProductDto>> getAll(Principal principal) {
-        List<Product> products = new ArrayList<>();
+    public ResponseEntity<List<SimpleProductDto>> getAll(
+                                            @Parameter(description = "Offset del primer elemento", example = "0") @RequestParam(defaultValue = "0") int offset,
+                                            @Parameter(description = "Número de elementos", example = "20") @RequestParam(defaultValue = "20") int limit,
+                                            Principal principal) {
+
+        //Creamos la paginacion offset (inicio) limit (final) por id de producto                                            
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("id"));
+
+        Page<Product> products = null;
 
         //Comprobamos si el usuario es admin
         boolean isAdmin = getIsAdmin(principal);
 
         //Si es admin podra ver los productos no visibles
         if (isAdmin){
-            products = service.findAllProducts();
+            products = service.findAllProducts(pageable);
         } else {
-            products = service.findAllProductsWithoutInvisibles();
+            products = service.findAllProductsWithoutInvisibles(pageable);
         }
     
-        return ResponseEntity.ok(ProductUtility.getSimpleProductList(products));
+        return ResponseEntity.ok(ProductUtility.getSimpleProductList(products.getContent()));
     }
 
     //GET_BY_ID
