@@ -16,7 +16,7 @@ Este proyecto ha sido desarrollado con **Java 17.0.2** y **Spring Boot 3.5.10**.
 
  - [Java 17.0.2](https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_windows-x64_bin.zip) (Url para windows)
 - Docker para poder ejecutar la base de datos (**MySQL 8.1**)
-- Servidor de aplicaciones para desplegar la API (por ejemplo **Tomcat**)
+- Servidor de aplicaciones para desplegar la API (por ejemplo **Tomcat 10**)
 
 <br>
 
@@ -31,7 +31,7 @@ Este proyecto ha sido desarrollado con **Java 17.0.2** y **Spring Boot 3.5.10**.
 
 
 3. Desplegar el `.war` de la carpeta extraida
-    - Para Tomcat solo hay que añadirlo en la carpeta webapps y arrancarlo
+    - Para Tomcat 10 solo hay que añadirlo en la carpeta webapps y arrancarlo
 
 4. Acceder a **Swagger** para poder probar la API.
 
@@ -41,7 +41,7 @@ Este proyecto ha sido desarrollado con **Java 17.0.2** y **Spring Boot 3.5.10**.
 
 Este proyecto está documentado con **Swagger**. Accediendo a la interfaz podrás encontrar todos los endpoints disponibles y la información necesaria para utilizarlos.
 
-URL de acceso:  (En caso de desplegar en tomcat)
+URL de acceso:  (En caso de desplegar en tomcat 10)
 
 Ip del servidor + :Puerto + Nombre .war + /swagger-ui/index.html
 
