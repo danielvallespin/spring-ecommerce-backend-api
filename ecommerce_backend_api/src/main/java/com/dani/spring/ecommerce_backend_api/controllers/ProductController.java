@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ import com.dani.spring.ecommerce_backend_api.dto.requests.ProductUpdateRequestDt
 import com.dani.spring.ecommerce_backend_api.dto.responses.FullProductResponseDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.SimpleProductDto;
 import com.dani.spring.ecommerce_backend_api.entities.product.Product;
+import com.dani.spring.ecommerce_backend_api.pageable.PageableFilters;
 import com.dani.spring.ecommerce_backend_api.services.ProductService;
 import com.dani.spring.ecommerce_backend_api.services.UserService;
 import com.dani.spring.ecommerce_backend_api.utils.ProductUtility;
@@ -68,7 +68,7 @@ public class ProductController {
                                             Principal principal) {
 
         //Creamos la paginacion offset (inicio) limit (final) por id de producto                                            
-        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("id"));
+        Pageable pageable = new PageableFilters(offset, limit, Sort.by("id"));
 
         Page<Product> products = null;
 
