@@ -22,15 +22,18 @@ Este proyecto ha sido desarrollado con **Java 17.0.2** y **Spring Boot 3.5.10**.
 
 ## Instalación
 
-1. Crear el contenedor Docker utilizando el fichero **docker-compose.yml**
+1. Descargar y extraer el fichero .zip de la ultima entrega
 
-    - Ejecutar el siguiente comando en la carpeta `docker`:
+2. Crear el contenedor Docker utilizando el fichero **docker-compose.yml** 
+(Este docker sql se ejecuta en el ``puerto 3307``)
+
+    - Ejecutar el comando `docker compose up -d` des de CMD en la ruta de la carpeta docker de la carpeta extraida
 
 
-2. Descargar el fichero `.war` adjunto al proyecto y desplegarlo en el servidor de aplicaciones.
-    - Para Tomcat solo hay que añadirlo
+3. Desplegar el `.war` de la carpeta extraida
+    - Para Tomcat solo hay que añadirlo en la carpeta webapps y arrancarlo
 
-3. Acceder a **Swagger** para poder probar la API.
+4. Acceder a **Swagger** para poder probar la API.
 
 <br>
 
