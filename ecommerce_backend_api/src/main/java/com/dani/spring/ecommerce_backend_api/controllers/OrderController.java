@@ -81,6 +81,23 @@ public class OrderController {
         return ResponseEntity.ok(OrderUtility.getOrderResponseList(service.getAllOrders()));
     }
 
+    //GET_ONE_ADMIN
+    @Operation(summary = "Obtener detalle de pedido (solo para admins)")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Detalle del pedido correctamente",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDetailRespondeDto.class))),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el pedido indicado", content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDetailRespondeDto> getOrderDetailAdmin(@PathVariable Long orderId, Principal principal){
+        //Obtenemos el pedido (si no exite devuelve un 404)
+        Order order = service.getOrderByIdAdmin(orderId);
+        return ResponseEntity.ok(OrderUtility.getOrderDetailResponse(order));
+    }
+
     //GET_MY_ALL
     @Operation(summary = "Obtener mis pedidos")
     @ApiResponses(value = {
@@ -94,8 +111,8 @@ public class OrderController {
         return ResponseEntity.ok(OrderUtility.getOrderResponseList(service.getAllMyOrders(principal.getName())));
     }
 
-    //GET_ONE
-    @Operation(summary = "Obtener detalle de pedido")
+    //GET_MY_ONE
+    @Operation(summary = "Obtener detalle de mi pedido")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
