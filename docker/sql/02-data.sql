@@ -228,7 +228,18 @@ INSERT INTO reviews (user_id, product_id, rating, title, comment, purchased) VAL
 (3, 5, 5, 'Mouse top', 'Funcionalidades muy completas y diseño elegante.', 1),
 (3, 3, 4, 'Monitor que cumple', 'Buena prestaciones y calidad, pero algo caro.', 1),
 (2, 5, 1, 'Tuve este mouse y no me gustó', 'Mala calidad y rendimiento.', 0),
-(3, 4, 3, 'Teclado normal', 'Esta bien, sin mas.', 0);
+(3, 4, 3, 'Teclado normal', 'Esta bien, sin mas.', 0),
+(1, 15, 4, 'Mesa muy práctica', 'La mesa gaming tiene buen espacio y buena estabilidad.', 0),
+(2, 16, 5, 'Buen sonido', 'Los altavoces Logitech ofrecen buena calidad de audio.', 0),
+(3, 17, 4, 'Router rápido', 'El WiFi funciona muy bien y tiene buena cobertura.', 0),
+(4, 18, 5, 'Imagen excelente', 'El televisor Samsung tiene una imagen muy nítida.', 0),
+(1, 19, 5, 'OLED espectacular', 'La calidad de imagen OLED es impresionante.', 0),
+(2, 20, 4, 'Gran consola', 'La PS5 tiene gran rendimiento y tiempos de carga bajos.', 0),
+(3, 21, 4, 'Muy potente', 'La Xbox Series X mueve los juegos sin problemas.', 0),
+(4, 22, 5, 'Muy divertida', 'La Nintendo Switch es muy versátil para jugar.', 0),
+(1, 23, 4, 'Buen mando', 'El DualSense es cómodo y tiene buena respuesta.', 0),
+(2, 24, 4, 'Mando sólido', 'Buen diseño y materiales de calidad.', 0),
+(3, 25, 5, 'Gran cámara', 'La Canon EOS hace fotos con gran detalle.', 0);
 
 
 -- ======================================
