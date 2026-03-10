@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dani.spring.ecommerce_backend_api.dto.requests.ProductCartRequestDto;
-import com.dani.spring.ecommerce_backend_api.dto.requests.ProductFromCartRequestDto;
 import com.dani.spring.ecommerce_backend_api.dto.responses.CartResponseDto;
 import com.dani.spring.ecommerce_backend_api.entities.cart.Cart;
 import com.dani.spring.ecommerce_backend_api.entities.cart.CartItem;
@@ -103,19 +103,19 @@ public class CartController {
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
         @ApiResponse(responseCode = "404", description = "El producto indicado no esta dentro del carrito", content = @Content)
     })
-    @DeleteMapping("/delete-item")
-    public ResponseEntity<Map<String, String>> deleteProductFromCart(@Valid @RequestBody ProductFromCartRequestDto request, Principal principal) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Map<String, String>> deleteProductFromCart(@PathVariable Long productId, Principal principal) {
         //Validacion de la existencia del producto (sino existe devuelve un 404)
-        productService.getProductById(request.getProductId());
+        productService.getProductById(productId);
 
         //Validacion de si el producto no esta en carrito para no hacer nada
-        boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
+        boolean alreadyExists = service.isProductInCart(productId, principal.getName());
         if (!alreadyExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
         }
 
         //Eliminamos
-        service.removeProductFromCart(request.getProductId(), principal.getName());
+        service.removeProductFromCart(productId, principal.getName());
         return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
     }
 

@@ -3,6 +3,7 @@ package com.dani.spring.ecommerce_backend_api.services.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,17 @@ public class OrderServiceImpl implements OrderService{
         }
 
         return order;
+    }
+
+    @Transactional(readOnly=true)
+    @Override
+    public Order getOrderByIdAdmin(Long orderId){
+        Optional<Order> optOrder = repository.findById(orderId);
+        if (!optOrder.isPresent()){
+            throw new EntityNotFoundException("No se ha encontrado el pedido con id: " + orderId);
+        }
+
+        return optOrder.orElseThrow();
     }
 
     @Transactional(readOnly=true)

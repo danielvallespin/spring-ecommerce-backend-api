@@ -17,6 +17,8 @@ public interface OrderService {
 
     Order getOrderById(Long orderId, String username);
 
+    Order getOrderByIdAdmin(Long orderId);
+
     Order createOrder(User user, Cart cart, Address address, List<PaymentMethod> paymentMethods, OrderRequestDto request);
 
 }
