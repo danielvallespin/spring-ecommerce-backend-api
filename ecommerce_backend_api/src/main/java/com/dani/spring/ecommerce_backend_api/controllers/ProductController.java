@@ -135,10 +135,10 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "El producto indicado no se ha encontrado en el sistema", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateRequestDto productRequest, @PathVariable Long id) {
-        validateProductExists(id);
-        Product productMod = service.updateFullProduct(productRequest, id);
+    @PatchMapping("/{productId}")
+    public ResponseEntity<FullProductResponseDto> update(@Valid @RequestBody ProductUpdateRequestDto productRequest, @PathVariable Long productId) {
+        validateProductExists(productId);
+        Product productMod = service.updateFullProduct(productRequest, productId);
         
         return ResponseEntity.ok(ProductUtility.getFullProductResponseDto(productMod));
     }
