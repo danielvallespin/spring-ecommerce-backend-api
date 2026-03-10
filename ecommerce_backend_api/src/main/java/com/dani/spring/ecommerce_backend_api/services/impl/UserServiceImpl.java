@@ -87,6 +87,8 @@ public class UserServiceImpl implements UserService{
         if (user instanceof UserAdminRequestDto adminDto) {
             admin = adminDto.isAdmin();
             newUser.setEnabled(adminDto.isEnabled());
+        } else{
+            newUser.setEnabled(true);
         }
         List<Role> roles = getUserRolesList(admin);
         newUser.setRoles(roles);
