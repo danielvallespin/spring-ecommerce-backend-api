@@ -49,8 +49,7 @@ public class UserController {
             @ApiResponse(
                 responseCode = "200", 
                 description = "Lista de usuarios obtenida correctamente", 
-                content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserAdminResponseDto.class)))),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
+                content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserAdminResponseDto.class))))
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
@@ -63,7 +62,7 @@ public class UserController {
     @Operation(summary = "Obtener usuario por id (solo para admins)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto obtenida correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserAdminResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
@@ -76,7 +75,6 @@ public class UserController {
     @Operation(summary = "Crear usuario con capacidad de hacerlo admin (solo para admins)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserAdminResponseDto.class))),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @PreAuthorize("hasRole('ADMIN')")
@@ -90,7 +88,6 @@ public class UserController {
     @Operation(summary = "Crear usuario normal (SIN JWT)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o error de validación", content = @Content)
     })
     @PostMapping("/singup")
@@ -103,9 +100,8 @@ public class UserController {
     //GET_MY_USER
     @Operation(summary = "Obtener tu propio usuario")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario obtenido correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+        @ApiResponse(responseCode = "200", description = "Usuario obtenido correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class)))
     })
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/my")
     public ResponseEntity<UserResponseDto> getMyUser(Principal principal){
         User user = service.getUserByUsername(principal.getName());
@@ -118,7 +114,6 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "Usuario habilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha enocntrado al usuario indicado", content = @Content)
     })
-    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(Principal principal, @RequestBody ChangePasswordRequestDto request){
         Map<String, String> data = new HashMap<>();

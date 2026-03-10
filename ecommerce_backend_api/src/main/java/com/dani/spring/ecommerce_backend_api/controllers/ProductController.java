@@ -201,6 +201,11 @@ public class ProductController {
         }
     }
 
+    /**
+     * Metodo que que devuelve si el usuario es admin
+     * @param principal
+     * @return
+     */
     private boolean getIsAdmin(Principal principal){
         boolean isAdmin = false;
         if (principal != null){

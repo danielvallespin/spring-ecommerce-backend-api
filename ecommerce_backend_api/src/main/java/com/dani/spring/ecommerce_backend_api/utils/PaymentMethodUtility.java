@@ -42,6 +42,12 @@ public class PaymentMethodUtility {
         return response;
     }
 
+    /**
+     * Transforma un PaymentMethodRequestDto en un PaymentMethodRequestDto
+     * @param request
+     * @param user
+     * @return
+     */
     public static PaymentMethod getPaymentMethod(PaymentMethodRequestDto request, User user){
         return new PaymentMethod(
             user,
