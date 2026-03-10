@@ -21,8 +21,11 @@ public class TokenJwtData {
                     "/product",
                     "/product/{productId}",
                     "/review/{productId}*",
+                    // Swagger
                     "/swagger-ui/**",
-                    "/v3/api-docs/**"
+                    "/v3/api-docs/**",
+                    "/swagger-ui.html",
+                    "/webjars/**"
             ),
             "POST", List.of(
                     "/login",

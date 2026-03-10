@@ -10,7 +10,10 @@
 	</parent>
 	<groupId>com.dani.spring</groupId>
 	<artifactId>ecommerce_backend_api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
+
+	<packaging>war</packaging>
+
 	<name>ecommerce_backend_api</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -87,6 +90,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>ecommerce-api</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
