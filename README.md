@@ -4,6 +4,8 @@ Desarrollado por: Daniel Vallespín Mellado
 
 Este es un proyecto personal escalable que puede seguir creciendo con el tiempo.
 
+Los datos de la base de datos han sido generados cn IA, cualquier coincidencia es una casualidad.
+
 API REST para un sistema de e-commerce construida con **Spring Boot**, **Hibernate/JPA**, **MySQL**, **JWT** y **Spring Security**.
 
 Este proyecto ha sido desarrollado con **Java 17.0.2** y **Spring Boot 3.5.10**.
@@ -50,6 +52,21 @@ Los endpoints tienen diferentes posibilidades de acceso segun permisos
 - **Sin indicación** → Requiere un usuario autenticado
 - **(SIN JWT)** → Accesible sin autenticación
 - **(Solo para admins)** → Acceso exclusivo para usuarios con rol administrador
+
+
+<br>
+
+## Usuarios de acceso
+
+Aqui indicare los primeros usuarios creados para logearse
+
+| Username | Password | Rol |
+|------|------|------|
+dani | 1234 | User |
+iris | 1234 | User |
+user | 1234 | User |
+admin | admin | Admin |
+
 
 <br>
 
