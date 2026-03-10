@@ -63,12 +63,20 @@ public class ProductController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<SimpleProductDto>> getAll(
-                                            @Parameter(description = "Offset del primer elemento", example = "0") @RequestParam(defaultValue = "0") int offset,
-                                            @Parameter(description = "Número de elementos", example = "20") @RequestParam(defaultValue = "20") int limit,
+                                            @Parameter(description = "Offset del primer elemento", example = "0") @RequestParam(required = false) Integer offset,
+                                            @Parameter(description = "Número de elementos", example = "20") @RequestParam(required = false) Integer limit,
                                             Principal principal) {
 
-        //Creamos la paginacion offset (inicio) limit (final) por id de producto                                            
-        Pageable pageable = new PageableFilters(offset, limit, Sort.by("id"));
+        //Creamos la paginacion offset (inicio) limit (final) por id de producto
+        Pageable pageable;
+        if (limit == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            if (offset == null){
+                offset = 0;
+            }
+            pageable = new PageableFilters(offset, limit, Sort.by("id"));
+        }
 
         Page<Product> products = null;
 
