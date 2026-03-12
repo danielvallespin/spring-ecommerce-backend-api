@@ -127,34 +127,27 @@ public class CartController {
             responseCode = "200", 
             description = "Cantidad del producto modificada correctamente", 
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),
-        @ApiResponse(responseCode = "200", description = "Producto eliminado del carrito correctamente", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado ningún producto con id: id", content = @Content),
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PutMapping("/change-quantity")
-    public ResponseEntity<?> changeQuantityOfCartProduct(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
+    public ResponseEntity<CartResponseDto> changeQuantityOfCartProduct(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = productService.getProductById(request.getProductId());
 
-        //Validacion para comprobar que el producto este en el carrito
-        boolean alreadyExists = service.isProductInCart(request.getProductId(), principal.getName());
-        if (!alreadyExists) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El producto indicado no esta dentro del carrito"));
-        }
+        //Validacion para comprobar que el producto este en el carrito (si no existe devuelve 404)
+        service.getCartItemById(request.getProductId(), principal.getName());
 
         //Si la cantidad es 0 lo eliminamos
         if (request.getQuantity() <= 0) {
-            service.removeProductFromCart(request.getProductId(), principal.getName());
-            return ResponseEntity.ok(Map.of("message", "Producto eliminado del carrito correctamente"));
+            service.removeProductFromCart(product.getId(), principal.getName());
+        } else{
+            //Validacion del stock disponible para poder cambiar o no
+            CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
+            //Modificamos
+            service.updateProductQuantity(request.getProductId(), request.getQuantity(), principal.getName());
         }
-
-        //Validacion del stock disponible para poder cambiar o no
-        CartUtility.validateAvailableStock(request.getQuantity(), product.getStock());
-
-        //Modificamos
-        service.updateProductQuantity(request.getProductId(), request.getQuantity(), principal.getName());
-
         
         //Obtenemos el carro con las modificaciones y lo devolvemos
         Cart cart = service.getUserCart(principal.getName());
