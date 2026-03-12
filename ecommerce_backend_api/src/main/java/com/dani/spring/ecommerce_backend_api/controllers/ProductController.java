@@ -167,7 +167,10 @@ public class ProductController {
     }
 
     //DESHABILITAR_VISIBILIDAD
-    @Operation(summary = "Deshabilitar la visibilidad de un producto por id (solo para admins) IMPORTANTE esta accion borrara los productos del los carritos y listas de deseados")
+    @Operation(
+        summary = "Deshabilitar la visibilidad de un producto por id (solo para admins)",
+        description = "Esta accion elimina el producto de todas las wishlist y carritos en los que se encuentre"
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Producto deshabilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado el producto indicado", content = @Content)

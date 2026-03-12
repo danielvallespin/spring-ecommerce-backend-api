@@ -3,6 +3,8 @@ package com.dani.spring.ecommerce_backend_api.dto.responses;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class CartResponseDto {
@@ -14,6 +16,7 @@ public class CartResponseDto {
     private final Long userId;
 
     @Schema(description = "Precio total", example = "143.65")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "0.00")
     private final BigDecimal amount;
 
     private final List<CartItemResponseDto> items;

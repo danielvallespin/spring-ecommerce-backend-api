@@ -128,7 +128,10 @@ public class OrderController {
     }
 
     //CREATE
-    @Operation(summary = "Crear un pedido")
+    @Operation(
+        summary = "Crear un pedido",
+        description = "Esta accion genera un pedido, elimina todos los producto del carrito y descuenta el stock de los productos"
+    )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",

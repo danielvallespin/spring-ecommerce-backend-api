@@ -148,7 +148,10 @@ public class UserController {
 
 
     //DISABLE_BY_ID
-    @Operation(summary = "Deshabilitar usuario por id (solo para admins)  IMPORTANTE dar de baja un usuario vacia su carrito")
+    @Operation(
+        summary = "Deshabilitar usuario por id (solo para admins)",
+        description = "Al deshabilitar un usuario se eliminan todos los items que pueda tener en el carrito"
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuario deshabilitado correctamente", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado al usuario indicado", content = @Content)

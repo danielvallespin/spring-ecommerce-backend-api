@@ -2,6 +2,8 @@ package com.dani.spring.ecommerce_backend_api.dto.responses;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class OrderItemResponseDto {
@@ -22,6 +24,7 @@ public class OrderItemResponseDto {
     private final String brand;
 
     @Schema(description = "Precio de cuando se compro el producto", example = "234.56")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "0.00")
     private final BigDecimal price;
 
     @Schema(description = "Cantidad del producto adquirida", example = "2")

@@ -204,6 +204,10 @@ DELETE | /address/{addressId} | Eliminar dirección | User |
 
 ## Pedidos
 
+    Importante!
+
+    Actualemente no conecta con ninguna API para la verificación del pago, por lo que lo simula (siempre y cuando los datos sean correctos)
+
 | Método | Endpoint | Descripción | Permiso |
 |------|------|---------------|-------|
 GET | /order/all | Obtener todos los pedidos | Admin |
