@@ -185,6 +185,7 @@ public class OrderServiceImpl implements OrderService{
      * Descuenta el stock comprado de los productos
      * @param orderItems
      */
+    @Transactional
     private void discountProductsStock(List<OrderItem> orderItems){
         for (OrderItem orderItem : orderItems){
             productService.discountStock(orderItem.getProduct().getId(), orderItem.getQuantity());

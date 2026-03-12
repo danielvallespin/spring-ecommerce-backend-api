@@ -70,14 +70,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeProductFromCart(Long productId, String username) {
         Cart cart = getUserCart(username);
-
+        //Obtenemos el producto del carrito
         CartItemId cartItemId = new CartItemId(cart.getId(), productId);
-        Optional<CartItem> optCartItem = getCartItemById(cartItemId);
-        if (optCartItem.isPresent()){
-            CartItem cartItem = optCartItem.orElseThrow();
-            //Al eliminarlo de el objeto padre orphanRemoval lo elimina
-            cart.getItems().remove(cartItem);
-        }
+        CartItem cartItem = getCartItemById(cartItemId);
+        //Al eliminarlo de el objeto padre orphanRemoval lo elimina
+        cart.getItems().remove(cartItem);
     }
 
     @Transactional(readOnly=true)
@@ -93,27 +90,37 @@ public class CartServiceImpl implements CartService {
     public void updateProductQuantity(Long productId, Integer quantity, String username) {
         Cart cart = getUserCart(username);
         CartItemId cartItemId = new CartItemId(cart.getId(), productId);
-        Optional<CartItem> optCartItem = getCartItemById(cartItemId);
-        if (optCartItem.isPresent()){
-            CartItem cartItem = optCartItem.orElseThrow();
-            cartItem.setQuantity(quantity);
-            cartItemRepository.save(cartItem);
+        CartItem cartItem = getCartItemById(cartItemId);
+        //Modificamos y guardamos
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+    }
+
+    @Transactional(readOnly=true)
+    @Override
+    public CartItem getCartItemById(CartItemId cartItemId) {
+        Optional<CartItem> optCartItem = cartItemRepository.findById(cartItemId);
+        if (!optCartItem.isPresent()){
+            throw new EntityNotFoundException("No se ha encontrado ningún producto con id: " + cartItemId.getProductId() + " en su carrito");
         }
+
+        return optCartItem.orElseThrow();
     }
 
     @Transactional(readOnly=true)
     @Override
-    public Optional<CartItem> getCartItemById(CartItemId cartItemId) {
-        return cartItemRepository.findById(cartItemId);
-    }
-
-    @Transactional(readOnly=true)
-    @Override
-    public Optional<CartItem> getCartItemById(Long productId, String username) {
+    public CartItem getCartItemById(Long productId, String username) {
         Cart cart = getUserCart(username);
         return getCartItemById(new CartItemId(cart.getId(), productId));
     }
     
+    @Transactional(readOnly=true)
+    @Override
+    public Optional<CartItem> getOptionalCartItemById(Long productId, String username) {
+        Cart cart = getUserCart(username);
+        return cartItemRepository.findById(new CartItemId(cart.getId(), productId));
+    }
+
     @Transactional
     @Override
     public void emptyCart(String username) {

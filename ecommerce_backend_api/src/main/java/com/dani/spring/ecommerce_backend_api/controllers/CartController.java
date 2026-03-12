@@ -51,7 +51,8 @@ public class CartController {
         @ApiResponse(
                 responseCode = "200",
                 description = "Carrito obtenido correctamente",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),})
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),
+            })
     @GetMapping("/my")
     public ResponseEntity<CartResponseDto> getUserCart(Principal principal) {
         Cart userCart = service.getUserCart(principal.getName());
@@ -75,7 +76,7 @@ public class CartController {
         }
 
         //Validacion para no superar el stock disponible
-        Optional<CartItem> optCartItem = service.getCartItemById(product.getId(), principal.getName());
+        Optional<CartItem> optCartItem = service.getOptionalCartItemById(product.getId(), principal.getName());
         if (optCartItem.isPresent()) {
             CartItem cartItem = optCartItem.orElseThrow();
 
@@ -122,14 +123,17 @@ public class CartController {
     //CHANGE_QUANTITY
     @Operation(summary = "Cambiar cantidad de producto del carrito")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cantidad del producto modificada correctamente", content = @Content),
+        @ApiResponse(
+            responseCode = "200", 
+            description = "Cantidad del producto modificada correctamente", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartResponseDto.class))),
         @ApiResponse(responseCode = "200", description = "Producto eliminado del carrito correctamente", content = @Content),
         @ApiResponse(responseCode = "400", description = "Datos invalidos", content = @Content),
         @ApiResponse(responseCode = "404", description = "No se ha encontrado ningún producto con id: id", content = @Content),
         @ApiResponse(responseCode = "409", description = "Stock insuficiente, stock disponible: stock", content = @Content)
     })
     @PutMapping("/change-quantity")
-    public ResponseEntity<Map<String, String>> changeQuantityOfCartProduct(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
+    public ResponseEntity<?> changeQuantityOfCartProduct(@Valid @RequestBody ProductCartRequestDto request, Principal principal) {
         //Obtenemos el product (sino existe devuelve un 404)
         Product product = productService.getProductById(request.getProductId());
 
@@ -151,7 +155,10 @@ public class CartController {
         //Modificamos
         service.updateProductQuantity(request.getProductId(), request.getQuantity(), principal.getName());
 
-        return ResponseEntity.ok(Map.of("message", "Cantidad del producto modificada correctamente"));
+        
+        //Obtenemos el carro con las modificaciones y lo devolvemos
+        Cart cart = service.getUserCart(principal.getName());
+        return ResponseEntity.ok(CartUtility.getCartResponse(cart));
     }
 
     //DELETE_ALL_ITEMS

@@ -24,9 +24,11 @@ public interface CartService {
 
     void updateProductQuantity(Long productId, Integer quantity, String username);
 
-    Optional<CartItem> getCartItemById(CartItemId cartItemId);
+    CartItem getCartItemById(CartItemId cartItemId);
 
-    Optional<CartItem> getCartItemById(Long productId, String username);
+    CartItem getCartItemById(Long productId, String username);
+
+    Optional<CartItem> getOptionalCartItemById(Long productId, String username);
 
     void emptyCart(String username);
 
