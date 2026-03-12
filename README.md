@@ -59,6 +59,10 @@ Los endpoints tienen diferentes posibilidades de acceso segun permisos
 
 <br>
 
+    Una vez iniciada la sesión, hay que copiar el token de la respuesta y clicar en Authorize o el icono de un candado de cualquier end point y pegarlo ahí.
+
+<br>
+
 ## Usuarios de acceso
 
 Aqui indicare los primeros usuarios creados para logearse
@@ -69,7 +73,6 @@ dani | 1234 | User |
 iris | 1234 | User |
 user | 1234 | User |
 admin | admin | Admin |
-
 
 <br>
 
